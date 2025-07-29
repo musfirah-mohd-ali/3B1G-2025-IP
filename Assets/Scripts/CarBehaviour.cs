@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class CarBehaviour : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public Rigidbody SphereRB;
+
     void Start()
     {
         
@@ -11,6 +12,6 @@ public class CarBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        transform.position = SphereRB.transform.position;
     }
 }
