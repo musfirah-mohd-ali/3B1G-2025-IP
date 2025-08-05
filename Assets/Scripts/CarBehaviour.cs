@@ -12,6 +12,8 @@ public class CarBehaviour : MonoBehaviour
     public float turnSpeed = 40f;
     public float brakeForce = 100f;
     public float maxBrakeSpeed = 20f;
+    public float frictionForce = 15f;
+    public float rollingResistance = 5f;
 
     void Start()
     {
@@ -49,6 +51,9 @@ public class CarBehaviour : MonoBehaviour
     private void FixedUpdate()
     {
         SphereRB.AddForce(transform.forward * moveInput, ForceMode.Acceleration);
+        
+        // Apply friction forces
+        ApplyFriction();
     }
 
     private void ApplyBraking()
@@ -65,6 +70,33 @@ public class CarBehaviour : MonoBehaviour
         else
         {
             // Stop completely if moving very slowly
+            SphereRB.linearVelocity = Vector3.zero;
+        }
+    }
+
+    private void ApplyFriction()
+    {
+        Vector3 velocity = SphereRB.linearVelocity;
+        
+        // Apply rolling resistance (constant deceleration)
+        if (velocity.magnitude > 0.1f)
+        {
+            Vector3 rollingResistanceForce = -velocity.normalized * rollingResistance;
+            SphereRB.AddForce(rollingResistanceForce, ForceMode.Acceleration);
+        }
+        
+        // Apply velocity-based friction (increases with speed)
+        if (velocity.magnitude > 0.1f)
+        {
+            Vector3 frictionDirection = -velocity.normalized;
+            float frictionMagnitude = frictionForce * velocity.magnitude * 0.1f;
+            Vector3 totalFriction = frictionDirection * frictionMagnitude;
+            SphereRB.AddForce(totalFriction, ForceMode.Acceleration);
+        }
+        
+        // Stop completely if moving very slowly and no input
+        if (velocity.magnitude < 0.5f && Mathf.Abs(moveInput) < 0.1f)
+        {
             SphereRB.linearVelocity = Vector3.zero;
         }
     }
