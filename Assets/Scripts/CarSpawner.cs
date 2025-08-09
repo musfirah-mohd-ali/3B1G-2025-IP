@@ -5,7 +5,6 @@ public class TrafficSpawner : MonoBehaviour
     [Header("Car Settings")]
     public GameObject carPrefab;
     public Transform[] spawnPoints; // Different spawn locations on the map
-    public Waypoints waypointsManager; // Reference to Waypoints component
     
     [Header("Spawn Control")]
     public int minCars = 3;         // Minimum number of cars to spawn
@@ -56,14 +55,16 @@ public class TrafficSpawner : MonoBehaviour
         Transform[] spawners = spawnPoints;
         
         // Fallback to waypoints if no spawn points
-        if (spawners.Length == 0 && waypointsManager != null && waypointsManager.points != null)
+        if (spawners.Length == 0)
         {
-            spawners = waypointsManager.points;
+            Waypoints waypoints = FindObjectOfType<Waypoints>();
+            if (waypoints?.points != null)
+                spawners = waypoints.points;
         }
         
         if (spawners.Length == 0)
         {
-            Debug.LogError("No spawn points or waypoints assigned!");
+            Debug.LogError("No spawn points or waypoints found!");
             return;
         }
 
@@ -99,11 +100,7 @@ public class TrafficSpawner : MonoBehaviour
             
             // Setup AI waypoints
             CarAI carAI = car.GetComponent<CarAI>();
-            if (carAI != null)
-            {
-                // Assign the waypoints manager - CarAI will handle the rest
-                carAI.waypointsManager = waypointsManager;
-            }
+            // CarAI now automatically finds waypoints - no manual assignment needed
             
             currentCarCount++;
             Debug.Log($"Spawned car {i + 1}/{carCount} at spawn point {randomSpawnIndex}. Total cars: {currentCarCount}");
