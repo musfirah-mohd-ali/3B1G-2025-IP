@@ -298,6 +298,8 @@ GameObject:
   - component: {fileID: 1490257590501074146}
   - component: {fileID: 3695909569360662568}
   - component: {fileID: 824090860728236708}
+  - component: {fileID: 9061441168634258459}
+  - component: {fileID: 8764111643910237970}
   m_Layer: 0
   m_Name: beetleV1
   m_TagString: Untagged
@@ -399,6 +401,57 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6927610493849093426, guid: 52a5e7bd136c4fe4ba439476447d60ad, type: 3}
+--- !u!114 &9061441168634258459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2903271842810311165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  turnSpeed: 5
+  rotationOffset: -90
+  normalSpeed: 10
+  waypointCheckInterval: 0.1
+  avoidanceDistance: 5
+  slowSpeed: 1
+  avoidanceCheckInterval: 0.05
+--- !u!195 &8764111643910237970
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2903271842810311165}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 1.9885964
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.5179043
+  m_BaseOffset: 0.75895214
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &2950492807211633146
 GameObject:
   m_ObjectHideFlags: 0

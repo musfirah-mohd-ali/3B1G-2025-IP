@@ -374,6 +374,8 @@ GameObject:
   - component: {fileID: 8174692031986797780}
   - component: {fileID: 6239350661786040350}
   - component: {fileID: 7976965865846690450}
+  - component: {fileID: -4411737941318856778}
+  - component: {fileID: -707800089458842193}
   m_Layer: 0
   m_Name: suvV3
   m_TagString: Untagged
@@ -473,6 +475,50 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1209930269172044155, guid: e49d17e581e672b40846888c82ec7c64, type: 3}
+--- !u!114 &-4411737941318856778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5590757342858009035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypointObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  normalSpeed: 10
+  slowSpeed: 1
+  waypointReachDistance: 2
+--- !u!195 &-707800089458842193
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5590757342858009035}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 2.4039361
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.6406989
+  m_BaseOffset: 0.82034945
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &6234332113225759089
 GameObject:
   m_ObjectHideFlags: 0

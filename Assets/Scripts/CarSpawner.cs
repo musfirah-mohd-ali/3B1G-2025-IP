@@ -95,7 +95,13 @@ public class TrafficSpawner : MonoBehaviour
             CarAI carAI = car.GetComponent<CarAI>();
             if (carAI != null && waypoints.Length > 0)
             {
-                carAI.waypoints = waypoints;
+                // Convert Transform array to GameObject array
+                GameObject[] waypointGameObjects = new GameObject[waypoints.Length];
+                for (int j = 0; j < waypoints.Length; j++)
+                {
+                    waypointGameObjects[j] = waypoints[j].gameObject;
+                }
+                carAI.waypointObjects = waypointGameObjects;
             }
             
             currentCarCount++;
