@@ -5,7 +5,7 @@ public class TrafficSpawner : MonoBehaviour
     [Header("Car Settings")]
     public GameObject carPrefab;
     public Transform[] spawnPoints; // Different spawn locations on the map
-    public Transform[] waypoints;   // Waypoint path for AI cars
+    public Waypoints waypointsManager; // Reference to Waypoints component
     
     [Header("Spawn Control")]
     public int minCars = 3;         // Minimum number of cars to spawn
@@ -53,7 +53,13 @@ public class TrafficSpawner : MonoBehaviour
     void SpawnCarsAtDifferentPoints(int carCount)
     {
         // If no spawn points are set, use waypoints as spawn points
-        Transform[] spawners = spawnPoints.Length > 0 ? spawnPoints : waypoints;
+        Transform[] spawners = spawnPoints;
+        
+        // Fallback to waypoints if no spawn points
+        if (spawners.Length == 0 && waypointsManager != null && waypointsManager.points != null)
+        {
+            spawners = waypointsManager.points;
+        }
         
         if (spawners.Length == 0)
         {
@@ -93,15 +99,10 @@ public class TrafficSpawner : MonoBehaviour
             
             // Setup AI waypoints
             CarAI carAI = car.GetComponent<CarAI>();
-            if (carAI != null && waypoints.Length > 0)
+            if (carAI != null)
             {
-                // Convert Transform array to GameObject array
-                GameObject[] waypointGameObjects = new GameObject[waypoints.Length];
-                for (int j = 0; j < waypoints.Length; j++)
-                {
-                    waypointGameObjects[j] = waypoints[j].gameObject;
-                }
-                carAI.waypointObjects = waypointGameObjects;
+                // Assign the waypoints manager - CarAI will handle the rest
+                carAI.waypointsManager = waypointsManager;
             }
             
             currentCarCount++;

@@ -1,80 +1,231 @@
 fileFormatVersion: 2
 guid: 01fc3043acaea47c48cbd83257fdd452
+AssetOrigin:
+  serializedVersion: 1
+  productId: 178286
+  packageName: Citizens | HYPER CASUAL LOW POLY SIMPLE PEOPLE
+  packageVersion: 1.0
+  assetPath: Assets/Simple People Citizens/FBX/SimplePuppets_Citizen.fbx
+  uploadId: 388432
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Armature
-    100002: body_businessman
-    100004: body_chef
-    100006: body_firefighter
-    100008: body_gang
-    100010: body_helmet
-    100012: body_hoodie
-    100014: body_police
-    100016: body_rocker
-    100018: body_skirtgirl
-    100020: body_tuxedo
-    100022: Bone
-    100024: //RootNode
-    400000: Armature
-    400002: body_businessman
-    400004: body_chef
-    400006: body_firefighter
-    400008: body_gang
-    400010: body_helmet
-    400012: body_hoodie
-    400014: body_police
-    400016: body_rocker
-    400018: body_skirtgirl
-    400020: body_tuxedo
-    400022: Bone
-    400024: //RootNode
-    2100000: body_rocker
-    2100002: skin
-    2100004: body_police
-    2100006: skirtgirl
-    2100008: body_hoodie
-    2100010: body_firefighter
-    2100012: body_helmet
-    2100014: body_gang
-    2100016: body_chef
-    2100018: body_businessman
-    4300000: body_rocker
-    4300002: body_police
-    4300004: body_skirtgirl
-    4300006: body_hoodie
-    4300008: body_firefighter
-    4300010: body_helmet
-    4300012: body_tuxedo
-    4300014: body_chef
-    4300016: body_businessman
-    4300018: body_gang
-    7400000: fall backward
-    7400002: fall forward
-    7400004: fall to the left
-    7400006: fall to the right
-    7400008: idle
-    7400010: jump01_short
-    7400012: jump02_middle
-    7400014: jump03_long
-    7400016: jump05_combination
-    7400018: walk
-    7400020: run
-    7400022: jump04_spin
-    7400024: default
-    7400026: yes
-    7400028: no
-    9500000: //RootNode
-    13700000: body_businessman
-    13700002: body_chef
-    13700004: body_firefighter
-    13700006: body_gang
-    13700008: body_helmet
-    13700010: body_hoodie
-    13700012: body_police
-    13700014: body_rocker
-    13700016: body_skirtgirl
-    13700018: body_tuxedo
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Armature
+  - first:
+      1: 100002
+    second: body_businessman
+  - first:
+      1: 100004
+    second: body_chef
+  - first:
+      1: 100006
+    second: body_firefighter
+  - first:
+      1: 100008
+    second: body_gang
+  - first:
+      1: 100010
+    second: body_helmet
+  - first:
+      1: 100012
+    second: body_hoodie
+  - first:
+      1: 100014
+    second: body_police
+  - first:
+      1: 100016
+    second: body_rocker
+  - first:
+      1: 100018
+    second: body_skirtgirl
+  - first:
+      1: 100020
+    second: body_tuxedo
+  - first:
+      1: 100022
+    second: Bone
+  - first:
+      1: 100024
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Armature
+  - first:
+      4: 400002
+    second: body_businessman
+  - first:
+      4: 400004
+    second: body_chef
+  - first:
+      4: 400006
+    second: body_firefighter
+  - first:
+      4: 400008
+    second: body_gang
+  - first:
+      4: 400010
+    second: body_helmet
+  - first:
+      4: 400012
+    second: body_hoodie
+  - first:
+      4: 400014
+    second: body_police
+  - first:
+      4: 400016
+    second: body_rocker
+  - first:
+      4: 400018
+    second: body_skirtgirl
+  - first:
+      4: 400020
+    second: body_tuxedo
+  - first:
+      4: 400022
+    second: Bone
+  - first:
+      4: 400024
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: body_rocker
+  - first:
+      21: 2100002
+    second: skin
+  - first:
+      21: 2100004
+    second: body_police
+  - first:
+      21: 2100006
+    second: skirtgirl
+  - first:
+      21: 2100008
+    second: body_hoodie
+  - first:
+      21: 2100010
+    second: body_firefighter
+  - first:
+      21: 2100012
+    second: body_helmet
+  - first:
+      21: 2100014
+    second: body_gang
+  - first:
+      21: 2100016
+    second: body_chef
+  - first:
+      21: 2100018
+    second: body_businessman
+  - first:
+      43: 4300000
+    second: body_rocker
+  - first:
+      43: 4300002
+    second: body_police
+  - first:
+      43: 4300004
+    second: body_skirtgirl
+  - first:
+      43: 4300006
+    second: body_hoodie
+  - first:
+      43: 4300008
+    second: body_firefighter
+  - first:
+      43: 4300010
+    second: body_helmet
+  - first:
+      43: 4300012
+    second: body_tuxedo
+  - first:
+      43: 4300014
+    second: body_chef
+  - first:
+      43: 4300016
+    second: body_businessman
+  - first:
+      43: 4300018
+    second: body_gang
+  - first:
+      74: 7400000
+    second: fall backward
+  - first:
+      74: 7400002
+    second: fall forward
+  - first:
+      74: 7400004
+    second: fall to the left
+  - first:
+      74: 7400006
+    second: fall to the right
+  - first:
+      74: 7400008
+    second: idle
+  - first:
+      74: 7400010
+    second: jump01_short
+  - first:
+      74: 7400012
+    second: jump02_middle
+  - first:
+      74: 7400014
+    second: jump03_long
+  - first:
+      74: 7400016
+    second: jump05_combination
+  - first:
+      74: 7400018
+    second: walk
+  - first:
+      74: 7400020
+    second: run
+  - first:
+      74: 7400022
+    second: jump04_spin
+  - first:
+      74: 7400024
+    second: default
+  - first:
+      74: 7400026
+    second: yes
+  - first:
+      74: 7400028
+    second: no
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: body_businessman
+  - first:
+      137: 13700002
+    second: body_chef
+  - first:
+      137: 13700004
+    second: body_firefighter
+  - first:
+      137: 13700006
+    second: body_gang
+  - first:
+      137: 13700008
+    second: body_helmet
+  - first:
+      137: 13700010
+    second: body_hoodie
+  - first:
+      137: 13700012
+    second: body_police
+  - first:
+      137: 13700014
+    second: body_rocker
+  - first:
+      137: 13700016
+    second: body_skirtgirl
+  - first:
+      137: 13700018
+    second: body_tuxedo
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -127,7 +278,7 @@ ModelImporter:
       name: skirtgirl
     second: {fileID: 2100000, guid: 986914419e9f948bab52e5a63e09696f, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -136,9 +287,8 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -156,29 +306,40 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 0.4
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 180
     normalImportMode: 1
@@ -187,10 +348,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -200,21 +361,20 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 0.4
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 178286
-  packageName: Citizens | HYPER CASUAL LOW POLY SIMPLE PEOPLE
-  packageVersion: 1.0
-  assetPath: Assets/Simple People Citizens/FBX/SimplePuppets_Citizen.fbx
-  uploadId: 388432

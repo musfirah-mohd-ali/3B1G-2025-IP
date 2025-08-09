@@ -487,16 +487,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointObjects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  waypointsManager: {fileID: 0}
   normalSpeed: 10
   slowSpeed: 1
   waypointReachDistance: 2
+  rotationOffset: -90
 --- !u!195 &2309398561514882383
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -510,7 +505,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 80
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
