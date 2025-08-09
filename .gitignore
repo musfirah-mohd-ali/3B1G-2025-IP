@@ -76,3 +76,4 @@ crashlytics-build.properties
 *.unity
 *.unity
 Assets/SampleScene.unity
+*.unity
