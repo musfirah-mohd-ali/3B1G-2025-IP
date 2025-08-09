@@ -9,7 +9,7 @@ public class CarBehaviour : MonoBehaviour
 
     public float fwdSpeed = 50f;
     public float revSpeed = 50f;
-    public float turnSpeed = 40f;
+    public float turnSpeed = 70f;
     public float brakeForce = 100f;
     public float maxBrakeSpeed = 20f;
     public float frictionForce = 15f;
