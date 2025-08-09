@@ -487,10 +487,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointsManager: {fileID: 0}
-  normalSpeed: 10
+  normalSpeed: 7
   slowSpeed: 1
-  waypointReachDistance: 2
   rotationOffset: -90
 --- !u!195 &-707800089458842193
 NavMeshAgent:
