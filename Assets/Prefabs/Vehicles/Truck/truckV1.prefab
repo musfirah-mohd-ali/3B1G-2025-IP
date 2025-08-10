@@ -231,6 +231,7 @@ GameObject:
   - component: {fileID: 3841401487836498738}
   - component: {fileID: 966626999941030334}
   - component: {fileID: -2833453190097705037}
+  - component: {fileID: 5172017165312442465}
   m_Layer: 0
   m_Name: truckV1
   m_TagString: Untagged
@@ -342,10 +343,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointObjects: []
   normalSpeed: 10
   slowSpeed: 1
-  waypointReachDistance: 2
+  rotationOffset: 0
+--- !u!195 &5172017165312442465
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3337055434690882279}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 3.1876638
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 3.111
+  m_BaseOffset: 1.5555
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &5788045901408287570
 GameObject:
   m_ObjectHideFlags: 0
