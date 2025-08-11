@@ -6580,8 +6580,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78872068430680c4089b9761bf906e63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timerText: {fileID: 1924071186}
   timerSlider: {fileID: 1223798122}
-  gameTime: 300
+  gameTime: 10
 --- !u!114 &606487990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11196,7 +11197,7 @@ GameObject:
   - component: {fileID: 1062045124}
   - component: {fileID: 1062045123}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Cash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11241,7 +11242,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cash Collected
+  m_text: 'Cash:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -12631,7 +12632,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1294103879}
   m_FillRect: {fileID: 1294103878}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
@@ -12676,7 +12677,7 @@ GameObject:
   - component: {fileID: 1227153158}
   - component: {fileID: 1227153157}
   m_Layer: 5
-  m_Name: ColelctedParcel
+  m_Name: CollectedParcel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12721,7 +12722,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'items to deliver: '
+  m_text: 'items delivered:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}

@@ -1,36 +1,38 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    private TextMeshProUGUI timerText;
+    public TextMeshProUGUI timerText; // Make this public so you can assign it in Inspector
     public Slider timerSlider;
     public float gameTime;
     private bool stopTimer;
+    private float startTime;
 
     void Start()
     {
         stopTimer = false;
         timerSlider.maxValue = gameTime;
         timerSlider.value = gameTime;
-
+        startTime = Time.time;
     }
+
     void Update()
-    {;
-        float time = gameTime - Time.time;
+    {
+        float elapsed = Time.time - startTime;
+        float time = Mathf.Clamp(gameTime - elapsed, 0, gameTime);
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
         string textTime = string.Format("{0:00}:{1:00}", minutes, seconds);
+
         if (time <= 0)
         {
             stopTimer = true;
         }
-        if (stopTimer == false)
+        if (!stopTimer)
         {
-            timerText.text = textTime;
+            timerText.text = "Time in game: " + textTime;
             timerSlider.value = time;
         }
     }
