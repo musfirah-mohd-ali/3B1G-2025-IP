@@ -8,7 +8,7 @@ public class CarBehaviour : MonoBehaviour
     public float revSpeed = 50f;
     public float turnSpeed = 70f;
     public float brakeForce = 100f;
-    public float frictionForce = 15f;
+    public float frictionForce = 40f;
     
     [Header("First Person Mode")]
     public GameObject firstPersonControllerPrefab;
@@ -54,11 +54,8 @@ public class CarBehaviour : MonoBehaviour
         // Keep car visual aligned with physics sphere
         transform.position = SphereRB.transform.position;
         
-        // Rotate car based on input (only when moving)
-        if (Mathf.Abs(moveInput) > 0.1f)
-        {
-            transform.Rotate(0, turnInput * turnSpeed * Time.deltaTime, 0, Space.World);
-        }
+        // Rotate car based on input
+        transform.Rotate(0, turnInput * turnSpeed * Time.deltaTime, 0, Space.World);
         
         // Apply braking
         if (Input.GetKey(KeyCode.Space))
