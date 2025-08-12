@@ -415,7 +415,6 @@ GameObject:
   - component: {fileID: 1646017249452698348}
   - component: {fileID: 8334970031581249522}
   - component: {fileID: 6993269243130142676}
-  - component: {fileID: 192275828438160951}
   m_Layer: 8
   m_Name: FirstPersonController 1
   m_TagString: Player
@@ -645,27 +644,6 @@ MonoBehaviour:
   pickupRange: 3
   interactKey: 101
   deliveryManager: {fileID: 0}
---- !u!65 &192275828438160951
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7791340773609909292}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.5606308, y: 2.0602653, z: 1.3234186}
-  m_Center: {x: -0.010280609, y: 1.0959986, z: 1.2194428}
 --- !u!1 &8487437368801348283
 GameObject:
   m_ObjectHideFlags: 0
