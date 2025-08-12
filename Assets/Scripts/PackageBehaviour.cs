@@ -7,12 +7,13 @@ public class PackageBehaviour : MonoBehaviour
     public DeliveryManager deliveryManager; // Assign in inspector
     
     private GameObject nearbyPackage = null; // Package currently in trigger range
+    public Timer timer;
 
     void Awake()
     {
         // Create trigger collider for package detection
         SetupTrigger();
-        
+
         // Auto-find DeliveryManager if not assigned
         if (deliveryManager == null)
         {
@@ -20,6 +21,14 @@ public class PackageBehaviour : MonoBehaviour
             if (deliveryManager == null)
             {
                 Debug.LogError("No DeliveryManager found in scene! Please add one.");
+            }
+        }
+        if( timer == null)
+        {
+            timer = FindObjectOfType<Timer>();
+            if (timer == null)
+            {
+                Debug.LogError("No Timer found in scene! Please add one.");
             }
         }
     }
@@ -73,6 +82,12 @@ public class PackageBehaviour : MonoBehaviour
         {
             // Start the delivery process
             deliveryManager.StartDelivery();
+
+            if (timer != null)
+            {
+                timer.maxTime = 300f; // Set game time to 5 minutes for delivery
+                timer.StartTimer();
+            }
 
             // Remove the package object
             Destroy(nearbyPackage);

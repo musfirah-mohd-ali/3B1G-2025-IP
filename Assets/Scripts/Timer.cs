@@ -6,34 +6,67 @@ public class Timer : MonoBehaviour
 {
     public TextMeshProUGUI timerText;
     public Slider timerSlider;
-    public float gameTime;
-    private bool stopTimer;
-    private float startTime;
+
+    public float maxTime = 30f; // time in seconds
+    private float currentTime;
+    private bool timerRunning = false;
 
     void Start()
     {
-        stopTimer = false;
-        timerSlider.maxValue = gameTime;
-        timerSlider.value = gameTime;
-        startTime = Time.time;
+        // Hide the slider and timer text at the start
+        timerSlider.gameObject.SetActive(false);
+        timerText.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        float elapsed = Time.time - startTime;
-        float time = Mathf.Clamp(gameTime - elapsed, 0, gameTime);
-        int minutes = Mathf.FloorToInt(time / 60f);
-        int seconds = Mathf.FloorToInt(time % 60f);
-        string textTime = string.Format("{0:00}:{1:00}", minutes, seconds);
+        if (timerRunning)
+        {
+            currentTime -= Time.deltaTime;
 
-        if (time <= 0)
-        {
-            stopTimer = true;
+            if (currentTime <= 0)
+            {
+                currentTime = 0;
+                StopTimer(); // Hides slider when time runs out
+            }
+
+            UpdateUI();
         }
-        if (!stopTimer)
-        {
-            timerText.text = textTime;
-            timerSlider.value = time;
-        }
+    }
+
+    public void StartTimer()
+    {
+        currentTime = maxTime;
+        timerRunning = true;
+
+        // Show slider and text when starting
+        timerSlider.gameObject.SetActive(true);
+        timerText.gameObject.SetActive(true);
+    }
+
+    public void StopTimer()
+    {
+        timerRunning = false;
+
+        // Hide slider and text
+        timerSlider.gameObject.SetActive(false);
+        timerText.gameObject.SetActive(false);
+    }
+
+    void UpdateUI()
+    {
+        timerSlider.value = currentTime / maxTime;
+
+        int minutes = Mathf.FloorToInt(currentTime / 60);
+        int seconds = Mathf.FloorToInt(currentTime % 60);
+
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+
+    // Call this when package is delivered
+    public void OnPackageDelivered()
+    {
+        StopTimer(); // stops and hides timer immediately
     }
 }

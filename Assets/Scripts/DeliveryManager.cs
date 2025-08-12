@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -11,10 +12,22 @@ public class DeliveryManager : MonoBehaviour
     public string[] locationNames;
     
     [Header("Delivery Zone Settings")]
-    public float deliveryTime = 3f; // Time to stay in zone
-    public GameObject deliveryZonePrefab; // Prefab to spawn as delivery zone
-    public float zoneScale = 1f; // Scale multiplier for the zone
-    
+    public float deliveryTime = 3f; 
+    public GameObject deliveryZonePrefab;
+    public float zoneScale = 1f;
+
+    [Header("Timer Reference")]
+    public Timer deliveryTimerUI;
+
+    [Header("Player Stats")]
+    public int deliveredPackages = 0;
+    public int cash = 0;
+    public int cashPerDelivery = 50;
+
+    [Header("UI References")]
+    public TextMeshProUGUI itemsText;
+    public TextMeshProUGUI cashText;
+
     private bool hasPackage = false;
     private Transform currentTarget;
     private int currentTargetIndex = -1;
@@ -37,11 +50,16 @@ public class DeliveryManager : MonoBehaviour
             Debug.LogError("No delivery targets assigned!");
             return;
         }
-        
+
         hasPackage = true;
         SelectRandomTarget();
         CreateDeliveryZone();
         Debug.Log($"Package picked up! Deliver it to: {GetCurrentLocationName()}");
+
+        if (deliveryTimerUI != null)
+        {
+            deliveryTimerUI.StartTimer();
+        }
     }
     
     private void SelectRandomTarget()
@@ -53,58 +71,46 @@ public class DeliveryManager : MonoBehaviour
     private void CreateDeliveryZone()
     {
         if (currentTarget == null) return;
-        
+
         GameObject zonePrefab = deliveryZonePrefab;
-        
-        // Fall back to primitive cylinder if no prefab assigned
+
         if (zonePrefab == null)
         {
             currentDeliveryZone = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             currentDeliveryZone.name = $"DeliveryZone_{GetCurrentLocationName()}";
-            
-            // Setup collider as trigger
             Collider zoneCollider = currentDeliveryZone.GetComponent<Collider>();
             zoneCollider.isTrigger = true;
         }
         else
         {
-            // Instantiate the custom prefab
             currentDeliveryZone = Instantiate(zonePrefab);
             currentDeliveryZone.name = $"DeliveryZone_{GetCurrentLocationName()}";
-            
-            // Ensure it has a trigger collider
             Collider zoneCollider = currentDeliveryZone.GetComponent<Collider>();
             if (zoneCollider == null)
             {
-                // Add a trigger collider if the prefab doesn't have one
                 zoneCollider = currentDeliveryZone.AddComponent<BoxCollider>();
             }
             zoneCollider.isTrigger = true;
         }
-        
-        // Position at target location
+
         currentDeliveryZone.transform.position = currentTarget.position;
-        
-        // Apply scale
+
         if (deliveryZonePrefab == null)
         {
-            // Scale primitive cylinder based on delivery range
             currentDeliveryZone.transform.localScale = new Vector3(deliveryRange * 2 * zoneScale, 0.5f * zoneScale, deliveryRange * 2 * zoneScale);
         }
         else
         {
-            // Scale custom prefab
             currentDeliveryZone.transform.localScale = Vector3.one * zoneScale;
         }
-        
-        // Add or find DeliveryZone component
+
         DeliveryZone zoneScript = currentDeliveryZone.GetComponent<DeliveryZone>();
         if (zoneScript == null)
         {
             zoneScript = currentDeliveryZone.AddComponent<DeliveryZone>();
         }
         zoneScript.deliveryManager = this;
-        
+
         Debug.Log($"Delivery zone created at {GetCurrentLocationName()}");
     }
     
@@ -118,8 +124,8 @@ public class DeliveryManager : MonoBehaviour
     private void UpdateDeliveryTimer()
     {
         deliveryTimer += Time.deltaTime;
-        
         float remainingTime = deliveryTime - deliveryTimer;
+
         if (remainingTime > 0)
         {
             Debug.Log($"Delivering... {remainingTime:F1}s remaining");
@@ -153,14 +159,28 @@ public class DeliveryManager : MonoBehaviour
     private void CompleteDelivery()
     {
         Debug.Log($"Delivery completed at {GetCurrentLocationName()}!");
-        
+
+        // Stop timer
+        if (deliveryTimerUI != null)
+            deliveryTimerUI.StopTimer();
+
+        // Update stats
+        deliveredPackages++;
+        cash += cashPerDelivery;
+
+        // Update UI
+        if (itemsText != null)
+            itemsText.text = $"ITEMS: {deliveredPackages}";
+        if (cashText != null)
+            cashText.text = $"CASH: ${cash}";
+
+        // Reset delivery state
         hasPackage = false;
         playerInZone = false;
         deliveryTimer = 0f;
         currentTarget = null;
         currentTargetIndex = -1;
-        
-        // Destroy the delivery zone
+
         if (currentDeliveryZone != null)
         {
             Destroy(currentDeliveryZone);
@@ -170,7 +190,7 @@ public class DeliveryManager : MonoBehaviour
 
     public Transform GetCurrentTarget() => currentTarget;
     public bool HasPackage() => hasPackage;
-    
+
     public string GetDeliveryStatus()
     {
         if (!hasPackage) return "No package";
@@ -182,19 +202,18 @@ public class DeliveryManager : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         if (deliveryTargets == null) return;
-        
+
         for (int i = 0; i < deliveryTargets.Length; i++)
         {
             if (deliveryTargets[i] == null) continue;
-            
+
             Gizmos.color = (deliveryTargets[i] == currentTarget) ? Color.red : Color.green;
             Gizmos.DrawWireSphere(deliveryTargets[i].position, deliveryRange);
-            
-            #if UNITY_EDITOR
-            string label = (locationNames != null && i < locationNames.Length) ? 
-                locationNames[i] : $"Location {i + 1}";
-            Handles.Label(deliveryTargets[i].position + Vector3.up * 2f, label);
-            #endif
+
+    #if UNITY_EDITOR
+                string label = (locationNames != null && i < locationNames.Length) ? locationNames[i] : $"Location {i + 1}";
+                Handles.Label(deliveryTargets[i].position + Vector3.up * 2f, label);
+    #endif
+            }
         }
     }
-}
