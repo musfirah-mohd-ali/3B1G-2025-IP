@@ -900,6 +900,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6182241254137866492, guid: 7311db45d9b078f43aad1adfe0e9df28, type: 3}
   m_PrefabInstance: {fileID: 32222554}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &33221036 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5786601014405744699, guid: b504750e830a99046aa82d527c8bda6d, type: 3}
+  m_PrefabInstance: {fileID: 52156092}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &33231274
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1207,13 +1212,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2660023395741504307, guid: b504750e830a99046aa82d527c8bda6d, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5142612239634808294, guid: b504750e830a99046aa82d527c8bda6d, type: 3}
       propertyPath: m_Name
       value: PlayerCar
       objectReference: {fileID: 0}
+    - target: {fileID: 5182354225039648497, guid: b504750e830a99046aa82d527c8bda6d, type: 3}
+      propertyPath: m_TargetDisplay
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5182354225039648502, guid: b504750e830a99046aa82d527c8bda6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.093123585
+      value: 0.09313527
       objectReference: {fileID: 0}
     - target: {fileID: 5182354225039648502, guid: b504750e830a99046aa82d527c8bda6d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1241,7 +1254,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8895333149344217877, guid: b504750e830a99046aa82d527c8bda6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 72.85
+      value: 496.962
       objectReference: {fileID: 0}
     - target: {fileID: 8895333149344217877, guid: b504750e830a99046aa82d527c8bda6d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5798,7 +5811,7 @@ Canvas:
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_TargetDisplay: 1
+  m_TargetDisplay: 0
 --- !u!224 &408128744
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11271,6 +11284,8 @@ MonoBehaviour:
   TimeOfDay: 10
   startTimeOfDay: 10
   dayLengthInSeconds: 600
+  rainVFX: {fileID: 4315811879619489524, guid: a6f48ec84b2e6b646857b594f2058ce0, type: 3}
+  playerTransform: {fileID: 33221036}
 --- !u!4 &939431080
 Transform:
   m_ObjectHideFlags: 0
@@ -11280,7 +11295,7 @@ Transform:
   m_GameObject: {fileID: 939431078}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -117.43489, y: -375.58237, z: 323.53333}
+  m_LocalPosition: {x: 833.1347, y: 1.3453715, z: -353.94342}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
