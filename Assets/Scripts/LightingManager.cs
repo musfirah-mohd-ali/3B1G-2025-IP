@@ -8,14 +8,15 @@ public class LightingManager : MonoBehaviour
 
     [SerializeField, Range(0, 24)] private float TimeOfDay;
     [SerializeField, Range(0, 24)] private float startTimeOfDay = 6f;
-
-    [Tooltip("Length of full day cycle in seconds")]
-    [SerializeField] private float dayLengthInSeconds = 120f; // Default 2 minutes per full 24h day
+    [SerializeField] private float dayLengthInSeconds = 120f;
+    [SerializeField] private ParticleSystem rainVFX;
+    [SerializeField] private Transform playerTransform; // Assign your player in the Inspector
 
     private void Start()
     {
         TimeOfDay = startTimeOfDay;
     }
+
     private void Update()
     {
         if (Preset == null)
@@ -27,18 +28,50 @@ public class LightingManager : MonoBehaviour
         {
             if (dayLengthInSeconds > 0)
             {
-                // Advance time of day according to day length
                 TimeOfDay += (24f / dayLengthInSeconds) * Time.deltaTime;
                 TimeOfDay %= 24f;
             }
 
+            // Rain triggers between 9 and 12
+            if (rainVFX != null)
+            {
+                if (TimeOfDay >= 9f && TimeOfDay < 12f)
+                {
+                    if (!rainVFX.isPlaying)
+                        rainVFX.Play();
+                    Debug.Log("rain");
+                }
+                else
+                {
+                    if (rainVFX.isPlaying)
+                        rainVFX.Stop();
+                }
+            }
+
             UpdateLighting(TimeOfDay / 24f);
+
+            // Move rain above player
+            if (rainVFX != null && playerTransform != null)
+            {
+                Vector3 rainOffset = new Vector3(0, 2f, 0); // Adjust Y as needed
+                rainVFX.transform.position = playerTransform.position + rainOffset;
+            }
         }
         else
         {
             UpdateLighting(TimeOfDay / 24f);
         }
     }
+
+    // private void LateUpdate()
+    // {
+    //     // Make rain follow the player
+    //     if (rainVFX != null && playerTransform != null)
+    //     {
+    //         Vector3 rainOffset = new Vector3(0, 10f, 0); // Adjust Y as needed
+    //         rainVFX.transform.position = playerTransform.position + rainOffset;
+    //     }
+    // }
 
     private void UpdateLighting(float timePercent)
     {
