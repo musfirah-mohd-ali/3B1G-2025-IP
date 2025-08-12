@@ -12,9 +12,20 @@ public class LightingManager : MonoBehaviour
     [SerializeField] private ParticleSystem rainVFX;
     [SerializeField] private Transform playerTransform; // Assign your player in the Inspector
 
+    // Rain timing variables
+    [SerializeField] private float minRainDuration = 1f; // in hours
+    [SerializeField] private float maxRainDuration = 5f; // in hours
+    private float rainStartTime;
+    private float rainEndTime;
+
     private void Start()
     {
         TimeOfDay = startTimeOfDay;
+
+        // Pick a random start time and duration for rain
+        rainStartTime = Random.Range(0f, 24f - maxRainDuration);
+        float rainDuration = Random.Range(minRainDuration, maxRainDuration);
+        rainEndTime = rainStartTime + rainDuration;
     }
 
     private void Update()
@@ -32,19 +43,20 @@ public class LightingManager : MonoBehaviour
                 TimeOfDay %= 24f;
             }
 
-            // Rain triggers between 9 and 12
+            // Rain at random time
             if (rainVFX != null)
             {
-                if (TimeOfDay >= 9f && TimeOfDay < 12f)
+                var childParticles = rainVFX.GetComponentsInChildren<ParticleSystem>();
+                foreach (var ps in childParticles)
                 {
-                    if (!rainVFX.isPlaying)
-                        rainVFX.Play();
-                    Debug.Log("rain");
-                }
-                else
-                {
-                    if (rainVFX.isPlaying)
-                        rainVFX.Stop();
+                    if (TimeOfDay >= rainStartTime && TimeOfDay < rainEndTime)
+                    {
+                        if (!ps.isPlaying) ps.Play();
+                    }
+                    else
+                    {
+                        if (ps.isPlaying) ps.Stop();
+                    }
                 }
             }
 
@@ -53,7 +65,7 @@ public class LightingManager : MonoBehaviour
             // Move rain above player
             if (rainVFX != null && playerTransform != null)
             {
-                Vector3 rainOffset = new Vector3(0, 2f, 0); // Adjust Y as needed
+                Vector3 rainOffset = new Vector3(0, 1.2f, 0);
                 rainVFX.transform.position = playerTransform.position + rainOffset;
             }
         }
@@ -62,16 +74,6 @@ public class LightingManager : MonoBehaviour
             UpdateLighting(TimeOfDay / 24f);
         }
     }
-
-    // private void LateUpdate()
-    // {
-    //     // Make rain follow the player
-    //     if (rainVFX != null && playerTransform != null)
-    //     {
-    //         Vector3 rainOffset = new Vector3(0, 10f, 0); // Adjust Y as needed
-    //         rainVFX.transform.position = playerTransform.position + rainOffset;
-    //     }
-    // }
 
     private void UpdateLighting(float timePercent)
     {
