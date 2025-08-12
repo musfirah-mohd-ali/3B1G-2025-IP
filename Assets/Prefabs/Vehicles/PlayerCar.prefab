@@ -41,9 +41,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8895333149344217877}
   - component: {fileID: 2006132354526659886}
+  - component: {fileID: 6559132906716580750}
+  - component: {fileID: 6694987742140927109}
   m_Layer: 0
   m_Name: PlayerCar
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -88,9 +90,44 @@ MonoBehaviour:
   turnSpeed: 70
   brakeForce: 100
   frictionForce: 40
-  firstPersonControllerPrefab: {fileID: 924684123783672082, guid: 034489f13ef73414199fd483c6b4ac62, type: 3}
+  firstPersonControllerPrefab: {fileID: 7791340773609909292, guid: 17d46613f408f9245a4769c561d396e8, type: 3}
   carCamera: {fileID: 5182354225039648497}
   playerSpawnPoint: {fileID: 4026772665241124780}
+--- !u!65 &6559132906716580750
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142612239634808294}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0275664, y: 1.4054232, z: 3.5233648}
+  m_Center: {x: 1.2340745, y: 0.20271184, z: -0.18670902}
+--- !u!114 &6694987742140927109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142612239634808294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7cf8eb16fd5c644b9dcf078020e8d59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  carBehaviour: {fileID: 2006132354526659886}
+  entryKey: 101
 --- !u!1 &6336631079611619134
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,7 +457,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_TargetDisplay
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: orthographic size

@@ -14,8 +14,10 @@ GameObject:
   - component: {fileID: 6932530864084114402}
   - component: {fileID: 3493522702709779822}
   - component: {fileID: 924684123783672094}
+  - component: {fileID: 436819982396111810}
+  - component: {fileID: -1848780540081422565}
   m_Layer: 8
-  m_Name: PlayerCapsule 1
+  m_Name: FirstPersonController
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -228,6 +230,42 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &436819982396111810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924684123783672082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cf34c51a322463409bbdc4406a2dd66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupRange: 3
+  interactKey: 101
+  deliveryManager: {fileID: 0}
+--- !u!65 &-1848780540081422565
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924684123783672082}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.7014618, y: 1.6635127, z: 1.3303719}
+  m_Center: {x: 0.0038146973, y: 1.0484841, z: 1.2556458}
 --- !u!1 &3573942279786276100
 GameObject:
   m_ObjectHideFlags: 0

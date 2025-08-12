@@ -2,15 +2,85 @@ using UnityEngine;
 
 public class PackageBehaviour : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public float pickupRange = 3f; // Range for the trigger sphere
+    public KeyCode interactKey = KeyCode.E; // Key to press for interaction
+    public DeliveryManager deliveryManager; // Assign in inspector
+    
+    private GameObject nearbyPackage = null; // Package currently in trigger range
+
+    void Awake()
     {
+        // Create trigger collider for package detection
+        SetupTrigger();
         
+        // Auto-find DeliveryManager if not assigned
+        if (deliveryManager == null)
+        {
+            deliveryManager = FindObjectOfType<DeliveryManager>();
+            if (deliveryManager == null)
+            {
+                Debug.LogError("No DeliveryManager found in scene! Please add one.");
+            }
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // Check for interact key press
+        if (Input.GetKeyDown(interactKey))
+        {
+            TryPickup();
+        }
+    }
+    
+    private void SetupTrigger()
+    {
+        // Add a sphere collider as trigger for package detection
+        SphereCollider triggerCollider = gameObject.GetComponent<SphereCollider>();
+        if (triggerCollider == null)
+        {
+            triggerCollider = gameObject.AddComponent<SphereCollider>();
+        }
         
+        triggerCollider.isTrigger = true;
+        triggerCollider.radius = pickupRange;
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        // Check if we entered a package trigger
+        if (other.CompareTag("Package"))
+        {
+            nearbyPackage = other.gameObject;
+            Debug.Log("Press Interact to pick up package");
+        }
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        // Check if we left a package trigger
+        if (other.CompareTag("Package") && other.gameObject == nearbyPackage)
+        {
+            nearbyPackage = null;
+            Debug.Log("Moved away from package");
+        }
+    }
+
+    void TryPickup()
+    {
+        // Check if there's a package nearby
+        if (nearbyPackage != null)
+        {
+            // Start the delivery process
+            deliveryManager.StartDelivery();
+
+            // Remove the package object
+            Destroy(nearbyPackage);
+            nearbyPackage = null;
+        }
+        else
+        {
+            Debug.Log("No package nearby to pick up");
+        }
     }
 }

@@ -152,4 +152,54 @@ public class CarBehaviour : MonoBehaviour
             Debug.LogError("No camera found in First Person Controller prefab!");
         }
     }
+    
+    public void EnterCar(GameObject fpsController)
+    {
+        if (fpsController != null)
+        {
+            // Switch back to car camera
+            SwitchToCarCamera(fpsController);
+            
+            // Destroy the FPS controller
+            Destroy(fpsController);
+            
+            // Reset car state
+            hasExited = false;
+            this.enabled = true;
+            
+            Debug.Log("Switched back to Car Controller");
+        }
+    }
+    
+    private void SwitchToCarCamera(GameObject fpsController)
+    {
+        // Disable FPS camera and its audio
+        Camera fpsCamera = fpsController.GetComponentInChildren<Camera>();
+        if (fpsCamera != null)
+        {
+            fpsCamera.enabled = false;
+            AudioListener fpsAudio = fpsCamera.GetComponent<AudioListener>();
+            if (fpsAudio != null) fpsAudio.enabled = false;
+        }
+        
+        // Enable car camera and ensure it has audio
+        if (carCamera != null)
+        {
+            carCamera.enabled = true;
+            
+            AudioListener carAudio = carCamera.GetComponent<AudioListener>();
+            if (carAudio != null)
+            {
+                carAudio.enabled = true;
+            }
+            else
+            {
+                carCamera.gameObject.AddComponent<AudioListener>();
+            }
+        }
+        else
+        {
+            Debug.LogError("Car camera not assigned!");
+        }
+    }
 }
