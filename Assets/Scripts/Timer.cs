@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    public TextMeshProUGUI timerText; // Make this public so you can assign it in Inspector
+    public TextMeshProUGUI timerText;
     public Slider timerSlider;
     public float gameTime;
     private bool stopTimer;
@@ -32,7 +32,7 @@ public class Timer : MonoBehaviour
         }
         if (!stopTimer)
         {
-            timerText.text = "Time in game: " + textTime;
+            timerText.text = textTime;
             timerSlider.value = time;
         }
     }
