@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 4610843697693495994}
   - component: {fileID: 1736690298413540976}
   - component: {fileID: 2322932505342233852}
+  - component: {fileID: 3826281358364881532}
+  - component: {fileID: -6044494482423051383}
   m_Layer: 0
   m_Name: sedanV3
   m_TagString: Untagged
@@ -111,6 +113,43 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1149615990870013810, guid: 260f50eb8df724e42be20df1852af9cc, type: 3}
+--- !u!195 &3826281358364881532
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223221545930180517}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 2.4045088
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.5274187
+  m_BaseOffset: 0.76370937
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &-6044494482423051383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223221545930180517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalSpeed: 7
+  slowSpeed: 1
+  rotationOffset: -90
 --- !u!1 &769645627907837022
 GameObject:
   m_ObjectHideFlags: 0

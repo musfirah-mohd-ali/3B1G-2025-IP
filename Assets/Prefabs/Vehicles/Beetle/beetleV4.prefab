@@ -956,23 +956,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  turnSpeed: 5
-  rotationOffset: -90
-  normalSpeed: 10
-  waypointCheckInterval: 0.1
-  avoidanceDistance: 5
+  normalSpeed: 7
   slowSpeed: 1
-  avoidanceCheckInterval: 0.05
+  rotationOffset: -90
 --- !u!195 &1022353192030852134
 NavMeshAgent:
   m_ObjectHideFlags: 0

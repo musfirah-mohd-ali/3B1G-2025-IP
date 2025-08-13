@@ -1019,7 +1019,6 @@ GameObject:
   - component: {fileID: 8009934608100468319}
   - component: {fileID: 6272460364907023571}
   - component: {fileID: 4162415621274666315}
-  - component: {fileID: -197682200232532746}
   - component: {fileID: -5602200445947716315}
   m_Layer: 0
   m_Name: beetleV2
@@ -1134,43 +1133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  normalSpeed: 10
+  normalSpeed: 7
   slowSpeed: 1
-  waypointReachDistance: 2
---- !u!114 &-197682200232532746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8370499998504191882}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  normalSpeed: 10
-  slowSpeed: 1
-  waypointReachDistance: 2
+  rotationOffset: -90
 --- !u!195 &-5602200445947716315
 NavMeshAgent:
   m_ObjectHideFlags: 0

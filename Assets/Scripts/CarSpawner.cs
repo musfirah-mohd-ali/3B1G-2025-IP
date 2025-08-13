@@ -3,7 +3,7 @@ using UnityEngine;
 public class TrafficSpawner : MonoBehaviour
 {
     [Header("Car Settings")]
-    public GameObject carPrefab;
+    public GameObject[] carPrefabs; // Multiple car prefabs to spawn randomly
     public Transform[] spawnPoints; // Different spawn locations on the map
     
     [Header("Spawn Control")]
@@ -51,6 +51,13 @@ public class TrafficSpawner : MonoBehaviour
 
     void SpawnCarsAtDifferentPoints(int carCount)
     {
+        // Check if we have car prefabs
+        if (carPrefabs == null || carPrefabs.Length == 0)
+        {
+            Debug.LogError("No car prefabs assigned to CarSpawner!");
+            return;
+        }
+        
         // If no spawn points are set, use waypoints as spawn points
         Transform[] spawners = spawnPoints;
         
@@ -85,6 +92,9 @@ public class TrafficSpawner : MonoBehaviour
             Transform spawnPoint = spawners[randomSpawnIndex];
             carsAtSpawnPoint[randomSpawnIndex]++;
             
+            // Randomly select a car prefab
+            GameObject selectedCarPrefab = carPrefabs[Random.Range(0, carPrefabs.Length)];
+            
             // Add some random offset so cars don't spawn on top of each other
             Vector3 randomOffset = new Vector3(
                 Random.Range(-3f, 3f), 
@@ -96,14 +106,14 @@ public class TrafficSpawner : MonoBehaviour
             
             // Spawn car facing the same direction as the spawn point
             Quaternion spawnRotation = spawnPoint.rotation;
-            GameObject car = Instantiate(carPrefab, spawnPos, spawnRotation);
+            GameObject car = Instantiate(selectedCarPrefab, spawnPos, spawnRotation);
             
             // Setup AI waypoints
             CarAI carAI = car.GetComponent<CarAI>();
             // CarAI now automatically finds waypoints - no manual assignment needed
             
             currentCarCount++;
-            Debug.Log($"Spawned car {i + 1}/{carCount} at spawn point {randomSpawnIndex}. Total cars: {currentCarCount}");
+            Debug.Log($"Spawned {selectedCarPrefab.name} {i + 1}/{carCount} at spawn point {randomSpawnIndex}. Total cars: {currentCarCount}");
         }
     }
 
