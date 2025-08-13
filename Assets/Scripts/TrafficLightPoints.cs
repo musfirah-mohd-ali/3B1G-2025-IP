@@ -1,25 +1,17 @@
 using UnityEngine;
 using System.Collections;
 
-public class TrafficLight : MonoBehaviour
+public class TrafficLightPoints : MonoBehaviour
 {
     public enum LightState { Green, Yellow, Red }
     public LightState currentLight { get; private set; }
 
-    // Mesh renderers for each lamp
-    public MeshRenderer redLight;
-    public MeshRenderer yellowLight;
-    public MeshRenderer greenLight;
+    [Header("Lights")]
+    public Light redLight;
+    public Light yellowLight;
+    public Light greenLight;
 
-    // Materials
-    public Material redUnlit;
-    public Material redLit;
-    public Material yellowUnlit;
-    public Material yellowLit;
-    public Material greenUnlit;
-    public Material greenLit;
-
-    // Durations
+    [Header("Durations (seconds)")]
     public float greenDuration = 5f;
     public float yellowDuration = 2f;
     public float redDuration = 5f;
@@ -33,27 +25,24 @@ public class TrafficLight : MonoBehaviour
     {
         while (true)
         {
-            // GREEN phase
             currentLight = LightState.Green;
             SetLights(false, false, true);
             yield return new WaitForSeconds(greenDuration);
 
-            // YELLOW phase
             currentLight = LightState.Yellow;
             SetLights(false, true, false);
             yield return new WaitForSeconds(yellowDuration);
 
-            // RED phase
             currentLight = LightState.Red;
             SetLights(true, false, false);
             yield return new WaitForSeconds(redDuration);
         }
     }
 
-    private void SetLights(bool redOn, bool yellowOn, bool greenOn)
+    void SetLights(bool redOn, bool yellowOn, bool greenOn)
     {
-        redLight.material = redOn ? redLit : redUnlit;
-        yellowLight.material = yellowOn ? yellowLit : yellowUnlit;
-        greenLight.material = greenOn ? greenLit : greenUnlit;
+        redLight.enabled = redOn;
+        yellowLight.enabled = yellowOn;
+        greenLight.enabled = greenOn;
     }
 }
