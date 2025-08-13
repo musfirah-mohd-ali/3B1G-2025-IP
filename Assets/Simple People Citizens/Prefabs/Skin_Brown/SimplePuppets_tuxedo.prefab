@@ -43,10 +43,11 @@ GameObject:
   - component: {fileID: 1455016302481404425}
   - component: {fileID: 1455016302481404430}
   - component: {fileID: -1834361041963910616}
-  - component: {fileID: 1721849480283210430}
+  - component: {fileID: 5978714322221830123}
+  - component: {fileID: -312670088418160930}
   m_Layer: 0
   m_Name: SimplePuppets_tuxedo
-  m_TagString: Untagged
+  m_TagString: Pedestrian
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,7 +113,30 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1721849480283210430
+--- !u!136 &5978714322221830123
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455016302481404424}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2.6483586
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.8241793, z: 0}
+--- !u!114 &-312670088418160930
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -135,13 +159,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  autoFindWaypointsIfEmpty: 0
   walkSpeed: 3.5
   runSpeed: 6
   waypointReachDistance: 1
   waitTimeAtWaypoint: 2
-  randomWaypoints: 1
+  randomWaypoints: 0
   shouldWaitAtWaypoints: 1
 --- !u!1 &1455016303375902880
 GameObject:

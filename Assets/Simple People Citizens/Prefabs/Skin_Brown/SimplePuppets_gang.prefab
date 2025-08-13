@@ -42,10 +42,11 @@ GameObject:
   - component: {fileID: 1564706096931326315}
   - component: {fileID: 1564706096931326314}
   - component: {fileID: 6313168208489889053}
-  - component: {fileID: -1330181331713868523}
+  - component: {fileID: 7232523871373003271}
+  - component: {fileID: 3249292194000546763}
   m_Layer: 0
   m_Name: SimplePuppets_gang
-  m_TagString: Untagged
+  m_TagString: Pedestrian
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,7 +112,30 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-1330181331713868523
+--- !u!136 &7232523871373003271
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564706096931326316}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2.7618098
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.8809049, z: 0}
+--- !u!114 &3249292194000546763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,13 +158,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  autoFindWaypointsIfEmpty: 0
   walkSpeed: 3.5
   runSpeed: 6
   waypointReachDistance: 1
   waitTimeAtWaypoint: 2
-  randomWaypoints: 1
+  randomWaypoints: 0
   shouldWaitAtWaypoints: 1
 --- !u!1 &1564706097582595999
 GameObject:

@@ -37,10 +37,56 @@ public class PedestrianSpawner : MonoBehaviour
 
     void SpawnInitialPedestrians()
     {
+        // Validate setup before spawning
+        if (pedestrianPrefabs == null || pedestrianPrefabs.Length == 0)
+        {
+            Debug.LogError("❌ PedestrianSpawner: No pedestrian prefabs assigned!");
+            return;
+        }
+        
+        // Check for waypoints - manual first, then fallback to Waypoints component
+        Transform[] waypointsToUse = GetWaypointsToUse();
+        
+        if (waypointsToUse == null || waypointsToUse.Length == 0)
+        {
+            Debug.LogError("❌ PedestrianSpawner: No waypoints found! Assign waypoints to 'Pedestrian Waypoints' array or ensure Waypoints component exists with pedestrian waypoints.");
+            return;
+        }
+        else
+        {
+            Debug.Log($"✅ PedestrianSpawner: Using {waypointsToUse.Length} waypoints for pedestrian navigation");
+        }
+        
         int pedestriansToSpawn = CalculateSpawnAmount();
         Debug.Log($"Spawning {pedestriansToSpawn} pedestrians initially");
         
         SpawnPedestriansAtDifferentPoints(pedestriansToSpawn);
+    }
+    
+    Transform[] GetWaypointsToUse()
+    {
+        // Priority 1: Use manually assigned waypoints
+        if (pedestrianWaypoints != null && pedestrianWaypoints.Length > 0)
+        {
+            Debug.Log("Using manually assigned waypoints from PedestrianSpawner");
+            return pedestrianWaypoints;
+        }
+        
+        // Priority 2: Fallback to Waypoints component pedestrian waypoints
+        Waypoints waypointsComponent = FindObjectOfType<Waypoints>();
+        if (waypointsComponent != null)
+        {
+            Transform[] centralWaypoints = waypointsComponent.GetPedestrianWaypoints();
+            if (centralWaypoints != null && centralWaypoints.Length > 0)
+            {
+                Debug.Log("Using pedestrian waypoints from central Waypoints component");
+                pedestrianWaypoints = centralWaypoints; // Cache for future use
+                return centralWaypoints;
+            }
+        }
+        
+        // No waypoints found
+        return null;
     }
 
     int CalculateSpawnAmount()
@@ -111,23 +157,57 @@ public class PedestrianSpawner : MonoBehaviour
             
             // Setup AI waypoints - assign manually configured waypoints
             PedestrianAI pedestrianAI = pedestrian.GetComponent<PedestrianAI>();
+            
+            // Enhanced debugging for waypoint assignment
+            Transform[] waypointsToAssign = GetWaypointsToUse();
+            Debug.Log($"🔍 WAYPOINT DEBUG: Spawner has {(waypointsToAssign?.Length ?? 0)} waypoints to assign");
+            
             if (pedestrianAI != null)
             {
+                Debug.Log($"🔍 WAYPOINT DEBUG: PedestrianAI component found on {pedestrian.name}");
+                
                 // Assign waypoints if available
-                if (pedestrianWaypoints != null && pedestrianWaypoints.Length > 0)
+                if (waypointsToAssign != null && waypointsToAssign.Length > 0)
                 {
-                    pedestrianAI.waypoints = pedestrianWaypoints;
-                    pedestrianAI.autoFindWaypointsIfEmpty = false; // Use manual waypoints only
-                    Debug.Log($"Assigned {pedestrianWaypoints.Length} manual waypoints to {pedestrian.name}");
+                    Debug.Log($"🔍 WAYPOINT DEBUG: About to assign {waypointsToAssign.Length} waypoints to {pedestrian.name}");
+                    
+                    // Log each waypoint for debugging
+                    for (int w = 0; w < waypointsToAssign.Length; w++)
+                    {
+                        if (waypointsToAssign[w] != null)
+                        {
+                            Debug.Log($"🔍 WAYPOINT DEBUG: Waypoint {w}: {waypointsToAssign[w].name} at {waypointsToAssign[w].position}");
+                        }
+                        else
+                        {
+                            Debug.LogError($"❌ WAYPOINT DEBUG: Waypoint {w} is NULL!");
+                        }
+                    }
+                    
+                    // Use the new initialization method for proper waypoint assignment
+                    pedestrianAI.InitializeWithWaypoints(waypointsToAssign);
+                    
+                    // Verify assignment worked
+                    if (pedestrianAI.waypoints != null && pedestrianAI.waypoints.Length > 0)
+                    {
+                        Debug.Log($"✅ SUCCESS: Assigned {pedestrianAI.waypoints.Length} waypoints to {pedestrian.name}");
+                    }
+                    else
+                    {
+                        Debug.LogError($"❌ FAILED: Waypoints are still null/empty after assignment to {pedestrian.name}");
+                    }
                 }
                 else
                 {
-                    pedestrianAI.autoFindWaypointsIfEmpty = true; // Allow fallback to Waypoints component
-                    Debug.Log($"No manual waypoints assigned to {pedestrian.name}, using auto-find");
+                    Debug.LogError($"❌ SPAWNER ERROR: No waypoints available! Assign waypoints to 'Pedestrian Waypoints' array or ensure Waypoints component has pedestrian waypoints.");
                 }
                 
                 // Optionally randomize some settings for variety
                 RandomizePedestrianBehavior(pedestrianAI);
+            }
+            else
+            {
+                Debug.LogError($"❌ No PedestrianAI component found on spawned pedestrian: {pedestrian.name}");
             }
             
             currentPedestrianCount++;
