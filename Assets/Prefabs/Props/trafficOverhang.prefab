@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3457360765343428146}
   - component: {fileID: 585454782059780856}
   - component: {fileID: 3475288437871194228}
+  - component: {fileID: 3697382403630100332}
   m_Layer: 0
   m_Name: trafficOverhang
   m_TagString: Untagged
@@ -69,6 +70,9 @@ MeshRenderer:
   - {fileID: 2100000, guid: 925076a831d5c7e4a8834d9c6cb0ed64, type: 2}
   - {fileID: 2100000, guid: 84cba7021081f0c47905cf9aa8e77fef, type: 2}
   - {fileID: 2100000, guid: 94ac9096baa060b43b7a6835e1cfb8f9, type: 2}
+  - {fileID: 2100000, guid: 86d159a4ae5135b4895680f10c222d2d, type: 2}
+  - {fileID: 2100000, guid: 74b84daef8d0cd34eb9b6f4777214269, type: 2}
+  - {fileID: 2100000, guid: a953d524384b0614fba154f1f77bc965, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -112,3 +116,27 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7386875536536994590, guid: 1289fd7dc7e6028478fcd6a72cc07d16, type: 3}
+--- !u!114 &3697382403630100332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377829311919536941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82dc675ad60763458c2e17423aca59e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  redLight: {fileID: 0}
+  yellowLight: {fileID: 0}
+  greenLight: {fileID: 0}
+  redUnlit: {fileID: 0}
+  redLit: {fileID: 0}
+  yellowUnlit: {fileID: 0}
+  yellowLit: {fileID: 0}
+  greenUnlit: {fileID: 0}
+  greenLit: {fileID: 0}
+  greenDuration: 5
+  yellowDuration: 2
+  redDuration: 5

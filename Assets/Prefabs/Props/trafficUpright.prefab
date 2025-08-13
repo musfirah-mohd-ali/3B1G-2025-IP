@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 7604541471526285962}
   - component: {fileID: 5650950337802798656}
   - component: {fileID: 8523472455786015948}
+  - component: {fileID: 7271256822348733401}
   m_Layer: 0
   m_Name: trafficUpright
   m_TagString: Untagged
@@ -222,3 +223,27 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 9101033468744012433, guid: 2d5142ed47316d54bb7e7ccbdb41cab2, type: 3}
+--- !u!114 &7271256822348733401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6155515880033986453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82dc675ad60763458c2e17423aca59e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  redLight: {fileID: 0}
+  yellowLight: {fileID: 0}
+  greenLight: {fileID: 0}
+  redUnlit: {fileID: 0}
+  redLit: {fileID: 0}
+  yellowUnlit: {fileID: 0}
+  yellowLit: {fileID: 0}
+  greenUnlit: {fileID: 0}
+  greenLit: {fileID: 0}
+  greenDuration: 5
+  yellowDuration: 2
+  redDuration: 5
