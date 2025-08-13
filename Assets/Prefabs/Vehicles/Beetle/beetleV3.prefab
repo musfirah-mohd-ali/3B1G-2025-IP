@@ -345,11 +345,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 15
+  normalSpeed: 5
   slowSpeed: 3
   stopDistance: 5
   rotationOffset: -90
   brakingSmooth: 5
+  waypointSearchRadius: 50
+  startFromNearestWaypoint: 1
+  updateInterval: 0.1
+  rotationUpdateInterval: 0.05
+  trafficLightCheckInterval: 0.2
+  safeFollowingDistance: 8
+  carLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!195 &-2784738010821612664
 NavMeshAgent:
   m_ObjectHideFlags: 0

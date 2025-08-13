@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8915371104212364117}
   - component: {fileID: 5259231470117145172}
   - component: {fileID: 8138802519334330514}
+  - component: {fileID: -4743011326122345845}
   m_Layer: 0
   m_Name: suvV1
   m_TagString: Untagged
@@ -131,6 +132,15 @@ MonoBehaviour:
   stopDistance: 5
   rotationOffset: -90
   brakingSmooth: 5
+  waypointSearchRadius: 50
+  startFromNearestWaypoint: 1
+  updateInterval: 0.1
+  rotationUpdateInterval: 0.05
+  trafficLightCheckInterval: 0.2
+  safeFollowingDistance: 10
+  carLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!195 &5259231470117145172
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -180,6 +190,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &-4743011326122345845
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355343763647690691}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 8.919807, y: 1.4549379, z: 1.8680005}
+  m_Center: {x: -0.15659642, y: 0.09288049, z: 0.00000035762787}
 --- !u!1 &704409974708720309
 GameObject:
   m_ObjectHideFlags: 0
