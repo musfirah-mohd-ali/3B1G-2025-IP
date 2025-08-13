@@ -1,21 +1,19 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
+    public GameObject timerUI;
     public TextMeshProUGUI timerText;
-    public Slider timerSlider;
+    public float maxTime = 30f;
 
-    public float maxTime = 30f; // time in seconds
     private float currentTime;
-    private bool timerRunning = false;
+    private bool timerRunning;
 
     void Start()
     {
-        // Hide the slider and timer text at the start
-        timerSlider.gameObject.SetActive(false);
-        timerText.gameObject.SetActive(false);
+        // Hide timer UI at start
+        timerUI.SetActive(false);
     }
 
     void Update()
@@ -27,7 +25,7 @@ public class Timer : MonoBehaviour
             if (currentTime <= 0)
             {
                 currentTime = 0;
-                StopTimer(); // Hides slider when time runs out
+                StopTimer();
             }
 
             UpdateUI();
@@ -39,34 +37,27 @@ public class Timer : MonoBehaviour
         currentTime = maxTime;
         timerRunning = true;
 
-        // Show slider and text when starting
-        timerSlider.gameObject.SetActive(true);
-        timerText.gameObject.SetActive(true);
+        // Show the whole timer UI (image + text)
+        timerUI.SetActive(true);
     }
 
     public void StopTimer()
     {
         timerRunning = false;
 
-        // Hide slider and text
-        timerSlider.gameObject.SetActive(false);
-        timerText.gameObject.SetActive(false);
+        // Hide the whole timer UI
+        timerUI.SetActive(false);
     }
 
-    void UpdateUI()
+    private void UpdateUI()
     {
-        timerSlider.value = currentTime / maxTime;
-
         int minutes = Mathf.FloorToInt(currentTime / 60);
         int seconds = Mathf.FloorToInt(currentTime % 60);
-
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
-
-    // Call this when package is delivered
     public void OnPackageDelivered()
     {
-        StopTimer(); // stops and hides timer immediately
+        StopTimer();
     }
 }
