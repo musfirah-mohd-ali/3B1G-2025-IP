@@ -413,9 +413,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 7
-  slowSpeed: 1
+  normalSpeed: 15
+  slowSpeed: 3
+  stopDistance: 5
   rotationOffset: -90
+  brakingSmooth: 5
 --- !u!195 &8764111643910237970
 NavMeshAgent:
   m_ObjectHideFlags: 0

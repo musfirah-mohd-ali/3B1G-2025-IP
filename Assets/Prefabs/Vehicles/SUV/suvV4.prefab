@@ -594,6 +594,7 @@ GameObject:
   - component: {fileID: 8699884994566507352}
   - component: {fileID: -7152311967039260926}
   - component: {fileID: 5533427207441676571}
+  - component: {fileID: 3738679074073560465}
   m_Layer: 0
   m_Name: suvV4
   m_TagString: Untagged
@@ -705,9 +706,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 7
-  slowSpeed: 1
+  normalSpeed: 5
+  slowSpeed: 3
+  stopDistance: 5
   rotationOffset: -90
+  brakingSmooth: 5
 --- !u!195 &5533427207441676571
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -730,6 +733,33 @@ NavMeshAgent:
   m_BaseOffset: 0.82034945
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!54 &3738679074073560465
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600464305511153665}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &7856320652982909356
 GameObject:
   m_ObjectHideFlags: 0

@@ -489,6 +489,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3004806067544195699}
   - component: {fileID: 6052044338047004793}
+  - component: {fileID: 6157929492129634797}
   m_Layer: 0
   m_Name: lights4trafficLight (1)
   m_TagString: Untagged
@@ -529,6 +530,27 @@ MonoBehaviour:
   redLight: {fileID: 4854344891785272823}
   yellowLight: {fileID: 4764259599918452046}
   greenLight: {fileID: 631085710709215376}
-  greenDuration: 10
-  yellowDuration: 5
-  redDuration: 10
+  greenDuration: 5
+  yellowDuration: 2
+  redDuration: 5
+--- !u!65 &6157929492129634797
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5425528982550071532}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 17.025269, y: 5.829216, z: 18.43855}
+  m_Center: {x: -13.148499, y: -2.414608, z: -5.176841}

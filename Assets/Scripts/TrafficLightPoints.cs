@@ -45,4 +45,9 @@ public class TrafficLightPoints : MonoBehaviour
         yellowLight.enabled = yellowOn;
         greenLight.enabled = greenOn;
     }
+    public bool CanGo()
+    {
+        return currentLight == LightState.Green;
+    }
+
 }
