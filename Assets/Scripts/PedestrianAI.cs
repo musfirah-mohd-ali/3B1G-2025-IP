@@ -50,7 +50,6 @@ public class PedestrianAI : MonoBehaviour
         // Get waypoints from manually assigned transforms
         if (waypoints != null && waypoints.Length > 0)
         {
-            Debug.Log($"{gameObject.name}: Starting movement with {waypoints.Length} waypoints");
             GoToNextWaypoint();
         }
         else
@@ -93,31 +92,22 @@ public class PedestrianAI : MonoBehaviour
                 GoToNextWaypoint();
             }
         }
-        
-        // Debug: Show current state
-        if (Time.frameCount % 60 == 0) // Every 60 frames (about once per second)
-        {
-            Debug.Log($"{gameObject.name}: Speed={agent.velocity.magnitude:F2}, Target={currentWaypointIndex}, Distance={agent.remainingDistance:F2}, PathStatus={agent.pathStatus}");
-        }
     }
 
     void GoToNextWaypoint()
     {
-        Debug.Log($"🔍 GOTO DEBUG: GoToNextWaypoint called on {gameObject.name}");
         
         if (waypoints == null || waypoints.Length == 0)
         {
-            Debug.LogError($"❌ GOTO DEBUG: {gameObject.name}: No waypoints available! waypoints null: {waypoints == null}, length: {waypoints?.Length ?? 0}");
+            Debug.LogError($"{gameObject.name}: No waypoints available!");
             return;
         }
         
         if (agent == null || !agent.isOnNavMesh)
         {
-            Debug.LogError($"❌ GOTO DEBUG: {gameObject.name}: NavMeshAgent is null or not on NavMesh! Agent null: {agent == null}, On NavMesh: {agent?.isOnNavMesh}");
+            Debug.LogError($"{gameObject.name}: NavMeshAgent is null or not on NavMesh!");
             return;
         }
-
-        Debug.Log($"🔍 GOTO DEBUG: {gameObject.name} has {waypoints.Length} waypoints, current index: {currentWaypointIndex}");
 
         if (randomWaypoints)
         {
@@ -136,23 +126,19 @@ public class PedestrianAI : MonoBehaviour
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
         }
         
-        Debug.Log($"🔍 GOTO DEBUG: {gameObject.name} targeting waypoint {currentWaypointIndex}");
-        
         if (waypoints[currentWaypointIndex] != null)
         {
             Vector3 targetPosition = waypoints[currentWaypointIndex].position;
-            Debug.Log($"🔍 GOTO DEBUG: Target position: {targetPosition}");
             
             // Check if the target position is valid on NavMesh
             NavMeshHit hit;
             if (NavMesh.SamplePosition(targetPosition, out hit, 2f, NavMesh.AllAreas))
             {
                 agent.SetDestination(hit.position);
-                Debug.Log($"✅ GOTO SUCCESS: {gameObject.name} walking to waypoint {currentWaypointIndex} at {hit.position}");
             }
             else
             {
-                Debug.LogError($"❌ GOTO ERROR: {gameObject.name}: Waypoint {currentWaypointIndex} at {targetPosition} is not on NavMesh!");
+                Debug.LogError($"{gameObject.name}: Waypoint {currentWaypointIndex} at {targetPosition} is not on NavMesh!");
                 // Try next waypoint
                 if (waypoints.Length > 1)
                 {
@@ -162,7 +148,7 @@ public class PedestrianAI : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"❌ GOTO ERROR: {gameObject.name}: Waypoint {currentWaypointIndex} is null!");
+            Debug.LogError($"{gameObject.name}: Waypoint {currentWaypointIndex} is null!");
         }
     }
     
@@ -170,7 +156,6 @@ public class PedestrianAI : MonoBehaviour
     {
         isWaiting = true;
         waitTimer = waitTimeAtWaypoint;
-        Debug.Log($"{gameObject.name} waiting at waypoint {currentWaypointIndex}");
     }
     
     // Public methods to control pedestrian behavior
@@ -197,8 +182,6 @@ public class PedestrianAI : MonoBehaviour
     // Method to reinitialize pedestrian with new waypoints (used by spawner)
     public void InitializeWithWaypoints(Transform[] newWaypoints)
     {
-        Debug.Log($"🔍 INIT DEBUG: InitializeWithWaypoints called on {gameObject.name} with {(newWaypoints?.Length ?? 0)} waypoints");
-        
         if (newWaypoints != null && newWaypoints.Length > 0)
         {
             // Validate all waypoints are not null
@@ -206,35 +189,31 @@ public class PedestrianAI : MonoBehaviour
             {
                 if (newWaypoints[i] == null)
                 {
-                    Debug.LogError($"❌ INIT DEBUG: Waypoint {i} in array is NULL!");
+                    Debug.LogError($"{gameObject.name}: Waypoint {i} in array is NULL!");
                     return;
                 }
             }
             
             waypoints = newWaypoints;
-            Debug.Log($"🔍 INIT DEBUG: Waypoints array assigned. Length: {waypoints.Length}");
             
             // Reset movement state
             currentWaypointIndex = 0;
             isWaiting = false;
             waitTimer = 0f;
             
-            Debug.Log($"🔍 INIT DEBUG: Movement state reset. Agent null? {agent == null}, Agent on NavMesh? {agent?.isOnNavMesh}");
-            
             // Start movement if we have an agent and are on NavMesh
             if (agent != null && agent.isOnNavMesh && waypoints.Length > 0)
             {
-                Debug.Log($"🔍 INIT DEBUG: Starting movement to first waypoint");
                 GoToNextWaypoint();
             }
             else
             {
-                Debug.LogWarning($"⚠️ INIT DEBUG: Cannot start movement - Agent: {agent != null}, OnNavMesh: {agent?.isOnNavMesh}, Waypoints: {waypoints.Length}");
+                Debug.LogWarning($"{gameObject.name}: Cannot start movement - check NavMesh and waypoints");
             }
         }
         else
         {
-            Debug.LogError($"❌ INIT DEBUG: {gameObject.name}: InitializeWithWaypoints called with null or empty waypoints array");
+            Debug.LogError($"{gameObject.name}: InitializeWithWaypoints called with null or empty waypoints array");
         }
     }
 }

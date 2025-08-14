@@ -133,11 +133,12 @@ MonoBehaviour:
   rotationOffset: -90
   brakingSmooth: 10
   waypointSearchRadius: 50
-  startFromNearestWaypoint: 0
+  startFromNearestWaypoint: 1
   updateInterval: 0.1
   rotationUpdateInterval: 0.05
   trafficLightCheckInterval: 0.2
-  carHeightOffset: 0.75
+  rotationSpeed: 15
+  useInstantRotation: 0
 --- !u!195 &5259231470117145172
 NavMeshAgent:
   m_ObjectHideFlags: 0

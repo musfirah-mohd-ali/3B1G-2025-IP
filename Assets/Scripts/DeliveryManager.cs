@@ -39,6 +39,12 @@ public class DeliveryManager : MonoBehaviour
     private float deliveryTimer = 0f;
     public PopupNotification PopupNotifications;
 
+    void Start()
+    {
+        // Initialize UI with current values from inspector
+        UpdateUI();
+    }
+
     void Update()
     {
         if (hasPackage && playerInZone)
@@ -173,10 +179,7 @@ public class DeliveryManager : MonoBehaviour
         cash += cashPerDelivery;
 
         // Update UI
-        if (itemsText != null)
-            itemsText.text = $"ITEMS: {deliveredPackages}";
-        if (cashText != null)
-            cashText.text = $"CASH: ${cash}";
+        UpdateUI();
 
         // Reset delivery state
         hasPackage = false;
@@ -206,15 +209,33 @@ public class DeliveryManager : MonoBehaviour
 
     public void ApplyTrafficViolationPenalty()
     {
+        Debug.Log($"[PENALTY] ApplyTrafficViolationPenalty called!");
+        
+        int previousCash = cash;
         cash -= trafficViolationPenalty;
+        
+        Debug.Log($"[PENALTY] Cash calculation: {previousCash} - {trafficViolationPenalty} = {cash}");
+        
         // Ensure cash doesn't go below 0
         if (cash < 0) cash = 0;
         
         // Update UI
+        UpdateUI();
+        
+        Debug.Log($"[PENALTY] Cash UI updated to: CASH: ${cash}");
+            
+        Debug.Log($"[PENALTY] Traffic violation! Penalty applied: ${trafficViolationPenalty}. Previous cash: ${previousCash}, Current cash: ${cash}");
+    }
+
+    private void UpdateUI()
+    {
+        // Update items text
+        if (itemsText != null)
+            itemsText.text = $"ITEMS: {deliveredPackages}";
+        
+        // Update cash text
         if (cashText != null)
             cashText.text = $"CASH: ${cash}";
-            
-        Debug.Log($"Traffic violation! Penalty applied: ${trafficViolationPenalty}. Current cash: ${cash}");
     }
 
     void OnDrawGizmosSelected()

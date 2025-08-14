@@ -223,6 +223,7 @@ MonoBehaviour:
   firstPersonControllerPrefab: {fileID: 7791340773609909292, guid: 17d46613f408f9245a4769c561d396e8, type: 3}
   carCamera: {fileID: 5182354225039648497}
   playerSpawnPoint: {fileID: 4026772665241124780}
+  deliveryManager: {fileID: 0}
 --- !u!65 &6559132906716580750
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -242,8 +243,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.0275664, y: 1.4054232, z: 3.5233648}
-  m_Center: {x: 1.2340745, y: 0.20271184, z: -0.18670902}
+  m_Size: {x: 3.3964415, y: 1.405423, z: 5.3556986}
+  m_Center: {x: 0.049637657, y: 0.20271192, z: 0.10797252}
 --- !u!114 &6694987742140927109
 MonoBehaviour:
   m_ObjectHideFlags: 0
