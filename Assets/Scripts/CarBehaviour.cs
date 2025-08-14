@@ -15,84 +15,16 @@ public class CarBehaviour : MonoBehaviour
     public Camera carCamera;
     public Transform playerSpawnPoint;
     
-    [Header("Traffic System")]
-    public DeliveryManager deliveryManager; // Reference to penalty system
-    
     // Input variables
     private float moveInput;
     private bool hasExited = false;
-    private TrafficLightPoints currentTrafficLight; // Track current traffic light in range
 
     void Start()
     {
         // Detach the physics sphere from the car visual
         SphereRB.transform.parent = null;
         
-        // Auto-find DeliveryManager if not assigned
-        if (deliveryManager == null)
-        {
-            deliveryManager = FindObjectOfType<DeliveryManager>();
-            if (deliveryManager == null)
-            {
-                Debug.LogError("[TRAFFIC SETUP] DeliveryManager not found! Traffic violation penalties will not work.");
-            }
-            else
-            {
-                Debug.Log($"[TRAFFIC SETUP] DeliveryManager found: {deliveryManager.name}. Current cash: ${deliveryManager.cash}, Penalty: ${deliveryManager.trafficViolationPenalty}");
-            }
-        }
-        else
-        {
-            Debug.Log($"[TRAFFIC SETUP] DeliveryManager manually assigned: {deliveryManager.name}");
-        }
-        
-        // Check if this car has a trigger collider
-        Collider[] colliders = GetComponents<Collider>();
-        bool hasTrigger = false;
-        foreach (Collider col in colliders)
-        {
-            if (col.isTrigger)
-            {
-                hasTrigger = true;
-                Debug.Log($"[TRAFFIC SETUP] Found trigger collider on {gameObject.name}: {col.GetType().Name}");
-                break;
-            }
-        }
-        
-        if (!hasTrigger)
-        {
-            Debug.LogError($"[TRAFFIC SETUP] No trigger collider found on {gameObject.name}! Traffic violation detection will not work.");
-        }
-        
-        // Option: Create a separate trigger specifically for traffic violations
-        CreateTrafficViolationTrigger();
-    }
-    
-    private void CreateTrafficViolationTrigger()
-    {
-        // Check if we already have a dedicated traffic trigger
-        Transform existingTrigger = transform.Find("TrafficViolationTrigger");
-        if (existingTrigger != null)
-        {
-            Debug.Log("[TRAFFIC SETUP] TrafficViolationTrigger already exists");
-            return;
-        }
-        
-        // Create a separate GameObject for traffic violation detection
-        GameObject trafficTrigger = new GameObject("TrafficViolationTrigger");
-        trafficTrigger.transform.SetParent(transform);
-        trafficTrigger.transform.localPosition = Vector3.zero;
-        
-        // Add a larger trigger collider for traffic detection
-        BoxCollider triggerCollider = trafficTrigger.AddComponent<BoxCollider>();
-        triggerCollider.isTrigger = true;
-        triggerCollider.size = new Vector3(2f, 2f, 2f); // Adjust size as needed
-        
-        // Add the traffic violation detector component
-        TrafficViolationDetector detector = trafficTrigger.AddComponent<TrafficViolationDetector>();
-        detector.carBehaviour = this;
-        
-        Debug.Log("[TRAFFIC SETUP] Created separate TrafficViolationTrigger");
+        Debug.Log("[CAR] Car initialized and ready for traffic detection");
     }
 
     void Update()
@@ -273,85 +205,24 @@ public class CarBehaviour : MonoBehaviour
         }
     }
     
-    // Traffic light trigger detection
+    // Car re-entry trigger (separate from traffic violations)
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"[TRIGGER ENTER] Player car triggered by object: {other.name} (Tag: {other.tag})");
-        
-        // Handle traffic light detection
-        TrafficLightPoints trafficLight = other.GetComponent<TrafficLightPoints>();
-        if (trafficLight != null)
-        {
-            currentTrafficLight = trafficLight;
-            Debug.Log($"[TRAFFIC ENTER] Player car entered traffic light zone: {other.name} - Light is {trafficLight.currentLight}");
-            return; // Exit early to avoid processing other logic
-        }
-        
-        // Handle player re-entry (check for first-person controller or player tag)
+        // Handle player re-entry detection
         if (other.CompareTag("Player") || other.name.Contains("FirstPerson") || other.GetComponent<CharacterController>() != null)
         {
             Debug.Log($"[CAR REENTRY] Player detected near car: {other.name}");
             // Add your car re-entry logic here if needed
-            return; // Exit early to avoid processing as traffic light
         }
-        
-        Debug.Log($"[TRIGGER ENTER] Object {other.name} - no specific handler");
     }
     
     void OnTriggerExit(Collider other)
     {
-        Debug.Log($"[TRIGGER EXIT] Player car exiting trigger: {other.name} (Tag: {other.tag})");
-        
-        // Handle traffic light exit
-        TrafficLightPoints trafficLight = other.GetComponent<TrafficLightPoints>();
-        if (trafficLight != null)
-        {
-            Debug.Log($"[TRAFFIC EXIT] Found TrafficLightPoints on {other.name}. Current light: {currentTrafficLight?.name ?? "none"}, This light: {trafficLight.name}");
-            
-            if (trafficLight == currentTrafficLight)
-            {
-                Debug.Log($"[TRAFFIC EXIT] Exiting the same traffic light we entered. Light state: {trafficLight.currentLight}");
-                
-                // Check if player ran a red light
-                if (trafficLight.currentLight == TrafficLightPoints.LightState.Red)
-                {
-                    Debug.Log("[VIOLATION DETECTED] TRAFFIC VIOLATION! Player ran a red light!");
-                    
-                    // Apply penalty through DeliveryManager
-                    if (deliveryManager != null)
-                    {
-                        Debug.Log($"[PENALTY APPLY] Calling ApplyTrafficViolationPenalty. Current cash: ${deliveryManager.cash}");
-                        deliveryManager.ApplyTrafficViolationPenalty();
-                        Debug.Log($"[PENALTY RESULT] Penalty applied. New cash: ${deliveryManager.cash}");
-                    }
-                    else
-                    {
-                        Debug.LogError("[ERROR] DeliveryManager reference not set in CarBehaviour!");
-                    }
-                }
-                else
-                {
-                    Debug.Log($"[NO VIOLATION] Light was {trafficLight.currentLight} - no penalty applied");
-                }
-                
-                currentTrafficLight = null;
-                Debug.Log("[TRAFFIC EXIT] Player car exited traffic light zone - reference cleared");
-            }
-            else
-            {
-                Debug.Log($"[TRAFFIC EXIT] Different traffic light - ignoring (entered: {currentTrafficLight?.name ?? "none"}, exiting: {trafficLight.name})");
-            }
-            return; // Exit early to avoid processing other logic
-        }
-        
-        // Handle player re-entry exit
+        // Handle player leaving car area
         if (other.CompareTag("Player") || other.name.Contains("FirstPerson") || other.GetComponent<CharacterController>() != null)
         {
             Debug.Log($"[CAR REENTRY] Player left car area: {other.name}");
             // Add your car re-entry exit logic here if needed
-            return; // Exit early
         }
-        
-        Debug.Log($"[TRIGGER EXIT] Object {other.name} - no specific handler");
     }
 }

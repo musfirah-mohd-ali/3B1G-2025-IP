@@ -240,11 +240,28 @@ public class DeliveryManager : MonoBehaviour
     {
         // Update items text
         if (itemsText != null)
+        {
             itemsText.text = $"ITEMS: {deliveredPackages}";
+            Debug.Log($"[UI UPDATE] Items text updated to: {itemsText.text}");
+        }
+        else
+        {
+            Debug.LogWarning("[UI UPDATE] Items text component is null!");
+        }
         
         // Update cash text
         if (cashText != null)
+        {
             cashText.text = $"CASH: ${cash}";
+            Debug.Log($"[UI UPDATE] Cash text updated to: {cashText.text}");
+        }
+        else
+        {
+            Debug.LogWarning("[UI UPDATE] Cash text component is null!");
+        }
+        
+        // Force canvas to update
+        Canvas.ForceUpdateCanvases();
     }
 
     void OnDrawGizmosSelected()
