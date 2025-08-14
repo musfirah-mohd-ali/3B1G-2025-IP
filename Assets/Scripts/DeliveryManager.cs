@@ -37,6 +37,7 @@ public class DeliveryManager : MonoBehaviour
     private GameObject currentDeliveryZone;
     private bool playerInZone = false;
     private float deliveryTimer = 0f;
+    public PopupNotification PopupNotifications;
 
     void Update()
     {
@@ -189,6 +190,7 @@ public class DeliveryManager : MonoBehaviour
             Destroy(currentDeliveryZone);
             currentDeliveryZone = null;
         }
+        PopupNotifications.ShowNextInstruction(); // Show next instruction after delivery
     }
 
     public Transform GetCurrentTarget() => currentTarget;
