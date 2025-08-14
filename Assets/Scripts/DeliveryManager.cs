@@ -23,6 +23,9 @@ public class DeliveryManager : MonoBehaviour
     public int deliveredPackages = 0;
     public int cash = 0;
     public int cashPerDelivery = 50;
+    
+    [Header("Penalty System")]
+    public int trafficViolationPenalty = 25;
 
     [Header("UI References")]
     public TextMeshProUGUI itemsText;
@@ -197,6 +200,19 @@ public class DeliveryManager : MonoBehaviour
         if (currentTarget == null) return "No destination";
         if (playerInZone) return $"Delivering... {deliveryTime - deliveryTimer:F1}s";
         return $"Deliver to: {GetCurrentLocationName()}";
+    }
+
+    public void ApplyTrafficViolationPenalty()
+    {
+        cash -= trafficViolationPenalty;
+        // Ensure cash doesn't go below 0
+        if (cash < 0) cash = 0;
+        
+        // Update UI
+        if (cashText != null)
+            cashText.text = $"CASH: ${cash}";
+            
+        Debug.Log($"Traffic violation! Penalty applied: ${trafficViolationPenalty}. Current cash: ${cash}");
     }
 
     void OnDrawGizmosSelected()

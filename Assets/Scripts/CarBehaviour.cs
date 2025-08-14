@@ -15,14 +15,28 @@ public class CarBehaviour : MonoBehaviour
     public Camera carCamera;
     public Transform playerSpawnPoint;
     
+    [Header("Traffic System")]
+    public DeliveryManager deliveryManager; // Reference to penalty system
+    
     // Input variables
     private float moveInput;
     private bool hasExited = false;
+    private TrafficLightPoints currentTrafficLight; // Track current traffic light in range
 
     void Start()
     {
         // Detach the physics sphere from the car visual
         SphereRB.transform.parent = null;
+        
+        // Auto-find DeliveryManager if not assigned
+        if (deliveryManager == null)
+        {
+            deliveryManager = FindObjectOfType<DeliveryManager>();
+            if (deliveryManager == null)
+            {
+                Debug.LogWarning("DeliveryManager not found! Traffic violation penalties will not work.");
+            }
+        }
     }
 
     void Update()
@@ -200,6 +214,43 @@ public class CarBehaviour : MonoBehaviour
         else
         {
             Debug.LogError("Car camera not assigned!");
+        }
+    }
+    
+    // Traffic light trigger detection
+    void OnTriggerEnter(Collider other)
+    {
+        TrafficLightPoints trafficLight = other.GetComponent<TrafficLightPoints>();
+        if (trafficLight != null)
+        {
+            currentTrafficLight = trafficLight;
+            Debug.Log($"Player car entered traffic light zone - Light is {trafficLight.currentLight}");
+        }
+    }
+    
+    void OnTriggerExit(Collider other)
+    {
+        TrafficLightPoints trafficLight = other.GetComponent<TrafficLightPoints>();
+        if (trafficLight != null && trafficLight == currentTrafficLight)
+        {
+            // Check if player ran a red light
+            if (trafficLight.currentLight == TrafficLightPoints.LightState.Red)
+            {
+                Debug.Log("TRAFFIC VIOLATION! Player ran a red light!");
+                
+                // Apply penalty through DeliveryManager
+                if (deliveryManager != null)
+                {
+                    deliveryManager.ApplyTrafficViolationPenalty();
+                }
+                else
+                {
+                    Debug.LogError("DeliveryManager reference not set in CarBehaviour!");
+                }
+            }
+            
+            currentTrafficLight = null;
+            Debug.Log("Player car exited traffic light zone");
         }
     }
 }
