@@ -474,7 +474,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1209930269172044155, guid: e49d17e581e672b40846888c82ec7c64, type: 3}
 --- !u!114 &-4411737941318856778
@@ -489,20 +489,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b14983713f041642864de7921f7d3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 5
-  slowSpeed: 3
+  normalSpeed: 10
+  slowSpeed: 6
   stopDistance: 5
   rotationOffset: -90
-  brakingSmooth: 5
+  brakingSmooth: 10
   waypointSearchRadius: 50
-  startFromNearestWaypoint: 1
+  startFromNearestWaypoint: 0
   updateInterval: 0.1
   rotationUpdateInterval: 0.05
   trafficLightCheckInterval: 0.2
-  safeFollowingDistance: 10
-  carLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
+  carHeightOffset: 0.75
 --- !u!195 &-707800089458842193
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -571,8 +568,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 9.664854, y: 1.4549379, z: 1.8680005}
-  m_Center: {x: -0.101708174, y: 0.09288049, z: 0.00000035762787}
+  m_Size: {x: 7.4163103, y: 1.4549379, z: 3.3990211}
+  m_Center: {x: 6.278417, y: 0.09288049, z: -0.036699295}
 --- !u!1 &6234332113225759089
 GameObject:
   m_ObjectHideFlags: 0

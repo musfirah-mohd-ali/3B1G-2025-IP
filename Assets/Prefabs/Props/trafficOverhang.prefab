@@ -530,7 +530,7 @@ MonoBehaviour:
   redLight: {fileID: 4854344891785272823}
   yellowLight: {fileID: 4764259599918452046}
   greenLight: {fileID: 631085710709215376}
-  greenDuration: 5
+  greenDuration: 10
   yellowDuration: 2
   redDuration: 5
 --- !u!65 &6157929492129634797

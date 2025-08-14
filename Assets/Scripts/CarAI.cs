@@ -15,22 +15,22 @@ public class CarAI : MonoBehaviour
     
     [Header("Coroutine Settings")]
     public float updateInterval = 0.1f;    // How often to update (in seconds)
-    public float rotationUpdateInterval = 0.1f; // Increased from 0.05f for stability
+    public float rotationUpdateInterval = 0.05f; // How often to update rotation (reduced for snappier turning)
     public float trafficLightCheckInterval = 0.2f; // How often to check traffic lights
     
-    [Header("Collision Avoidance")]
-    public float safeFollowingDistance = 8f;    // Minimum distance to maintain from car in front (used for trigger size reference)
+    [Header("Rotation Settings")]
+    public float rotationSpeed = 15f; // How fast the car turns (higher = snappier)
+    public bool useInstantRotation = false; // Enable for instant snappy rotation
 
     private NavMeshAgent agent;
     private Transform[] waypoints;
     private int currentWaypointIndex = 0;
     
     private TrafficLightPoints trafficLightInRange;
-    private bool isAvoidingCollision = false;  // Flag to track collision avoidance state
-    private GameObject carInFront = null;      // Reference to the car we're following
     
-    // Position stabilization
-    private float groundY; // Store the initial ground Y position
+    // Simple collision avoidance
+    private bool isObjectInTrigger = false;  // Flag to track if any car/pedestrian is in our trigger
+    private int objectsInTriggerCount = 0;   // Count of cars/pedestrians currently in trigger
     
     // Coroutine references
     private Coroutine movementCoroutine;
@@ -47,18 +47,17 @@ public class CarAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         
-        // Store initial ground position
-        groundY = transform.position.y;
+        // Reset collision avoidance state
+        isObjectInTrigger = false;
+        objectsInTriggerCount = 0;
         
-        agent.updateRotation = false;
-        agent.updateUpAxis = false; // Prevent vertical position changes
+        agent.updateRotation = false; // We handle rotation manually
         agent.speed = normalSpeed;
-        agent.acceleration = 6f; // Reduced from 8f for smoother movement
-        agent.angularSpeed = 120f; // Limit rotation speed
+        agent.acceleration = 8f;
+        agent.angularSpeed = 360f; // Increased from 120f for faster pathfinding turns
         agent.autoBraking = true;
-        agent.obstacleAvoidanceType = ObstacleAvoidanceType.MedQualityObstacleAvoidance; // Reduced for performance
-        agent.baseOffset = 0f; // Ensure agent stays at ground level
-
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.MedQualityObstacleAvoidance;
+        
         // Wait a frame to ensure everything is properly initialized
         yield return null;
         
@@ -117,14 +116,6 @@ public class CarAI : MonoBehaviour
         {
             yield return new WaitForSeconds(rotationUpdateInterval);
             
-            // Stabilize Y position to prevent glitching
-            if (Mathf.Abs(transform.position.y - groundY) > 0.1f)
-            {
-                Vector3 stabilizedPosition = transform.position;
-                stabilizedPosition.y = groundY;
-                transform.position = stabilizedPosition;
-            }
-            
             // Rotate towards destination
             if (agent != null && agent.isOnNavMesh && agent.hasPath && agent.velocity.sqrMagnitude > 0.01f)
             {
@@ -134,9 +125,17 @@ public class CarAI : MonoBehaviour
                 if (direction.sqrMagnitude > 0.01f)
                 {
                     Quaternion targetRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, rotationOffset, 0);
-                    // Use interval-based interpolation instead of deltaTime
-                    float rotationSpeed = 3f; // Reduced from 5f for smoother movement
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * rotationUpdateInterval);
+                    
+                    if (useInstantRotation)
+                    {
+                        // Instant snappy rotation
+                        transform.rotation = targetRotation;
+                    }
+                    else
+                    {
+                        // Smooth but fast rotation
+                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+                    }
                 }
             }
         }
@@ -148,10 +147,27 @@ public class CarAI : MonoBehaviour
         {
             yield return new WaitForSeconds(updateInterval);
             
+            // Safety checks
+            if (agent == null || !agent.isOnNavMesh || waypoints == null || waypoints.Length == 0)
+            {
+                continue;
+            }
+            
             // Check if we've reached the current waypoint
-            if (agent != null && agent.isOnNavMesh && !agent.pathPending && agent.remainingDistance < 2f)
+            if (!agent.pathPending && agent.remainingDistance < 2f)
             {
                 yield return StartCoroutine(GoToNextWaypointCoroutine());
+            }
+            // Check if agent is stuck (no movement for too long)
+            else if (agent.velocity.sqrMagnitude < 0.1f && !agent.isStopped && agent.hasPath)
+            {
+                // Only recalculate if we've been stuck for a while
+                yield return new WaitForSeconds(2f);
+                if (agent.velocity.sqrMagnitude < 0.1f && !agent.isStopped)
+                {
+                    Debug.LogWarning($"CarAI {gameObject.name}: Agent appears stuck, recalculating path...");
+                    yield return StartCoroutine(GoToNextWaypointCoroutine());
+                }
             }
         }
     }
@@ -162,36 +178,135 @@ public class CarAI : MonoBehaviour
         {
             yield return new WaitForSeconds(trafficLightCheckInterval);
             
-            if (agent == null || !agent.isOnNavMesh) continue;
+            // Safety check for NavMeshAgent
+            if (agent == null)
+            {
+                Debug.LogError($"CarAI {gameObject.name}: NavMeshAgent is null!");
+                continue;
+            }
+            
+            if (!agent.isOnNavMesh)
+            {
+                Debug.LogWarning($"CarAI {gameObject.name}: Agent is not on NavMesh! Position: {transform.position}");
+                continue;
+            }
+            
+            // Check for path issues
+            if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
+            {
+                Debug.LogWarning($"CarAI {gameObject.name}: Invalid path detected, recalculating...");
+                yield return StartCoroutine(GoToNextWaypointCoroutine());
+                continue;
+            }
 
+            // Traffic lights have priority - cars must stop at red lights
+            // Collision avoidance is secondary - only applies when traffic light allows movement
+            
+            bool shouldMove = false;
+            string reason = "";
+            
             if (trafficLightInRange != null)
             {
                 if (trafficLightInRange.CanGo())
                 {
-                    // Only resume if not avoiding collision
-                    if (!isAvoidingCollision)
-                        agent.isStopped = false; // green and no car ahead
+                    // Traffic light is green - always move (ignore collisions)
+                    shouldMove = true;
+                    reason = "Traffic light GREEN - moving (ignoring collisions)";
                 }
                 else
                 {
-                    agent.isStopped = true;  // red/yellow - always stop
+                    // Traffic light is red - always stop regardless of collision
+                    shouldMove = false;
+                    reason = "Traffic light RED - must stop";
                 }
             }
             else
             {
-                // No traffic light - only move if not avoiding collision
-                if (!isAvoidingCollision)
+                // No traffic light - only collision matters
+                if (!isObjectInTrigger)
+                {
+                    shouldMove = true;
+                    reason = "No traffic light and no objects in trigger";
+                }
+                else
+                {
+                    shouldMove = false;
+                    reason = "No traffic light but objects in trigger - collision avoidance";
+                }
+            }
+
+            // Apply movement decision with additional safety checks
+            if (shouldMove && agent.isStopped)
+            {
+                // Ensure we have a valid destination before resuming
+                if (agent.hasPath || agent.pathPending)
+                {
                     agent.isStopped = false;
+                    Debug.Log($"CarAI {gameObject.name}: MOVING - {reason}");
+                }
+                else
+                {
+                    Debug.LogWarning($"CarAI {gameObject.name}: Trying to move but no path available, recalculating...");
+                    yield return StartCoroutine(GoToNextWaypointCoroutine());
+                }
+            }
+            else if (!shouldMove && !agent.isStopped)
+            {
+                agent.isStopped = true;
+                Debug.Log($"CarAI {gameObject.name}: STOPPING - {reason}");
             }
         }
     }
     
     IEnumerator GoToNextWaypointCoroutine()
     {
-        if (waypoints == null || waypoints.Length == 0) yield break;
-        if (agent == null || !agent.isOnNavMesh) yield break;
+        if (waypoints == null || waypoints.Length == 0) 
+        {
+            Debug.LogError($"CarAI {gameObject.name}: No waypoints available!");
+            yield break;
+        }
+        if (agent == null || !agent.isOnNavMesh) 
+        {
+            Debug.LogError($"CarAI {gameObject.name}: Agent invalid or not on NavMesh!");
+            yield break;
+        }
 
-        agent.SetDestination(waypoints[currentWaypointIndex].position);
+        // Ensure current waypoint index is valid
+        if (currentWaypointIndex >= waypoints.Length)
+        {
+            currentWaypointIndex = 0;
+        }
+        
+        // Ensure the waypoint exists
+        if (waypoints[currentWaypointIndex] == null)
+        {
+            Debug.LogError($"CarAI {gameObject.name}: Waypoint {currentWaypointIndex} is null!");
+            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            yield break;
+        }
+
+        Vector3 targetPosition = waypoints[currentWaypointIndex].position;
+        
+        // Check if the destination is reachable
+        NavMeshPath testPath = new NavMeshPath();
+        if (!agent.CalculatePath(targetPosition, testPath) || testPath.status != NavMeshPathStatus.PathComplete)
+        {
+            Debug.LogWarning($"CarAI {gameObject.name}: Cannot reach waypoint {currentWaypointIndex}, trying next one...");
+            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            yield return StartCoroutine(GoToNextWaypointCoroutine());
+            yield break;
+        }
+        
+        bool destinationSet = agent.SetDestination(targetPosition);
+        if (!destinationSet)
+        {
+            Debug.LogError($"CarAI {gameObject.name}: Failed to set destination to waypoint {currentWaypointIndex}");
+        }
+        else
+        {
+            Debug.Log($"CarAI {gameObject.name}: Moving to waypoint {currentWaypointIndex} at {targetPosition}");
+        }
+        
         currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
         
         // Wait a frame to ensure destination is set
@@ -293,13 +408,14 @@ public class CarAI : MonoBehaviour
     
     IEnumerator OnTriggerEnterCoroutine(Collider other)
     {
-        Debug.Log("CarAI: Trigger Enter with " + other.name);
+        Debug.Log($"CarAI {gameObject.name}: Trigger Enter with {other.name}");
         
         // Detect traffic light
         TrafficLightPoints tl = other.GetComponent<TrafficLightPoints>();
         if (tl != null)
         {
             trafficLightInRange = tl;
+            Debug.Log($"CarAI {gameObject.name}: Traffic light detected - {tl.name}");
             yield return null; // Wait a frame for state to update
         }
         
@@ -307,21 +423,19 @@ public class CarAI : MonoBehaviour
         CarAI otherCarAI = other.GetComponent<CarAI>();
         if (otherCarAI != null && otherCarAI != this)
         {
-            // Check if the other car is in front of us
-            Vector3 directionToOther = (other.transform.position - transform.position).normalized;
-            float dotProduct = Vector3.Dot(transform.forward, directionToOther);
-            
-            // If the other car is roughly in front of us (dot product > 0.5)
-            if (dotProduct > 0.5f)
-            {
-                if (!isAvoidingCollision)
-                {
-                    isAvoidingCollision = true;
-                    carInFront = other.gameObject;
-                    agent.isStopped = true;
-                    Debug.Log($"CarAI on {gameObject.name}: Stopping to avoid collision with {carInFront.name} (trigger-based)");
-                }
-            }
+            objectsInTriggerCount++;
+            isObjectInTrigger = true;
+            Debug.Log($"CarAI {gameObject.name}: Car {other.name} entered trigger (Objects in trigger: {objectsInTriggerCount})");
+            // Note: Movement decision will be handled by TrafficLightCoroutine
+        }
+        
+        // Detect pedestrians for collision avoidance
+        if (other.CompareTag("Pedestrian"))
+        {
+            objectsInTriggerCount++;
+            isObjectInTrigger = true;
+            Debug.Log($"CarAI {gameObject.name}: Pedestrian {other.name} entered trigger (Objects in trigger: {objectsInTriggerCount})");
+            // Note: Movement decision will be handled by TrafficLightCoroutine
         }
     }
 
@@ -332,6 +446,7 @@ public class CarAI : MonoBehaviour
     
     IEnumerator OnTriggerExitCoroutine(Collider other)
     {
+        // Handle traffic light exit
         TrafficLightPoints tl = other.GetComponent<TrafficLightPoints>();
         if (tl != null && tl == trafficLightInRange)
         {
@@ -339,20 +454,43 @@ public class CarAI : MonoBehaviour
             yield return null; // Wait a frame for state to update
         }
         
-        // Handle collision avoidance exit
+        // Handle collision avoidance exit for cars
         CarAI otherCarAI = other.GetComponent<CarAI>();
-        if (otherCarAI != null && otherCarAI != this && carInFront == other.gameObject)
+        bool wasCarOrPedestrian = false;
+        
+        if (otherCarAI != null && otherCarAI != this)
         {
-            if (isAvoidingCollision)
+            objectsInTriggerCount--;
+            wasCarOrPedestrian = true;
+            Debug.Log($"CarAI {gameObject.name}: Car {other.name} exited trigger (Objects remaining: {objectsInTriggerCount})");
+        }
+        
+        // Handle collision avoidance exit for pedestrians
+        if (other.CompareTag("Pedestrian"))
+        {
+            objectsInTriggerCount--;
+            wasCarOrPedestrian = true;
+            Debug.Log($"CarAI {gameObject.name}: Pedestrian {other.name} exited trigger (Objects remaining: {objectsInTriggerCount})");
+        }
+        
+        // Update state only once if a car or pedestrian exited
+        if (wasCarOrPedestrian)
+        {
+            if (objectsInTriggerCount <= 0)
             {
-                isAvoidingCollision = false;
-                carInFront = null;
+                objectsInTriggerCount = 0; // Ensure it doesn't go negative
+                isObjectInTrigger = false;
+                Debug.Log($"CarAI {gameObject.name}: No objects in trigger - collision clear, checking movement");
                 
-                // Only resume if not stopped by traffic light
+                // Immediately check if we can resume movement
                 if (trafficLightInRange == null || trafficLightInRange.CanGo())
                 {
                     agent.isStopped = false;
-                    Debug.Log($"CarAI on {gameObject.name}: Resuming movement, car exited trigger zone");
+                    Debug.Log($"CarAI {gameObject.name}: RESUMING movement immediately - trigger cleared");
+                }
+                else
+                {
+                    Debug.Log($"CarAI {gameObject.name}: Trigger cleared but traffic light is red - staying stopped");
                 }
             }
         }
@@ -400,16 +538,15 @@ public class CarAI : MonoBehaviour
             return waypoints[currentWaypointIndex];
         return null;
     }
-    
-    // Public methods to get collision avoidance status
-    public bool IsAvoidingCollision()
+    // Public method to check collision avoidance status
+    public bool IsObjectInTrigger()
     {
-        return isAvoidingCollision;
+        return isObjectInTrigger;
     }
     
-    public GameObject GetCarInFront()
+    public int GetObjectsInTriggerCount()
     {
-        return carInFront;
+        return objectsInTriggerCount;
     }
     
     void OnDestroy()
@@ -455,8 +592,8 @@ public class CarAI : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, transform.forward * 5f);
         
-        // Draw trigger zone for collision detection (assumes trigger extends forward from car)
-        Gizmos.color = isAvoidingCollision ? Color.red : Color.cyan;
+        // Draw trigger visualization
+        Gizmos.color = isObjectInTrigger ? Color.red : Color.cyan;
         Collider triggerCollider = GetComponent<Collider>();
         if (triggerCollider != null && triggerCollider.isTrigger)
         {
@@ -465,17 +602,6 @@ public class CarAI : MonoBehaviour
             Gizmos.DrawWireCube(triggerCollider.bounds.center - transform.position, triggerCollider.bounds.size);
             Gizmos.matrix = Matrix4x4.identity;
         }
-        else
-        {
-            // Fallback: draw estimated trigger zone based on safe following distance
-            Vector3 triggerCenter = transform.position + transform.forward * (safeFollowingDistance * 0.5f);
-            Vector3 triggerSize = new Vector3(2f, 1f, safeFollowingDistance);
-            Gizmos.DrawWireCube(triggerCenter, triggerSize);
-        }
-        
-        // Draw safe following distance reference
-        Gizmos.color = new Color(1f, 0.5f, 0f); // Orange color
-        Gizmos.DrawWireSphere(transform.position + transform.forward * safeFollowingDistance, 1f);
         
         // Draw coroutine status
         if (Application.isPlaying)
@@ -486,9 +612,9 @@ public class CarAI : MonoBehaviour
             status += (trafficLightCoroutine != null) ? "T✓ " : "T✗ ";
             status += (waypointNavigationCoroutine != null) ? "W✓ " : "W✗ ";
             
-            if (isAvoidingCollision && carInFront != null)
+            if (isObjectInTrigger)
             {
-                status += $"\nAvoiding: {carInFront.name} (Trigger)";
+                status += $"\nObjects in trigger: {objectsInTriggerCount}";
             }
             
             UnityEditor.Handles.Label(labelPos, status);
