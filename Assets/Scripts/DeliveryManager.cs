@@ -193,7 +193,16 @@ public class DeliveryManager : MonoBehaviour
             Destroy(currentDeliveryZone);
             currentDeliveryZone = null;
         }
-        PopupNotifications.ShowNextInstruction(); // Show next instruction after delivery
+        
+        // Show next instruction after delivery (with null check)
+        if (PopupNotifications != null)
+        {
+            PopupNotifications.ShowNextInstruction();
+        }
+        else
+        {
+            Debug.LogWarning("PopupNotifications is not assigned in DeliveryManager!");
+        }
     }
 
     public Transform GetCurrentTarget() => currentTarget;

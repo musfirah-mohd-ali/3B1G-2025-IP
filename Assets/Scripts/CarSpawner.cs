@@ -16,8 +16,10 @@ public class TrafficSpawner : MonoBehaviour
     public bool continuousSpawning = false; // Keep spawning over time
     public float spawnInterval = 5f;        // Time between spawns (if continuous)
     public int targetCarCount = 8;          // Target number of cars to maintain
+    public int maxContinuousSpawns = 50;    // Maximum cars to spawn via continuous spawning
     
     private int currentCarCount = 0;
+    private int totalCarsSpawned = 0;       // Track total cars spawned for limit
 
     void Start()
     {
@@ -113,7 +115,8 @@ public class TrafficSpawner : MonoBehaviour
             // CarAI now automatically finds waypoints - no manual assignment needed
             
             currentCarCount++;
-            Debug.Log($"Spawned {selectedCarPrefab.name} {i + 1}/{carCount} at spawn point {randomSpawnIndex}. Total cars: {currentCarCount}");
+            totalCarsSpawned++; // Track total spawned cars
+            Debug.Log($"Spawned {selectedCarPrefab.name} {i + 1}/{carCount} at spawn point {randomSpawnIndex}. Current cars: {currentCarCount}, Total spawned: {totalCarsSpawned}");
         }
     }
 
@@ -135,6 +138,14 @@ public class TrafficSpawner : MonoBehaviour
 
     void MaintainCarCount()
     {
+        // Check if we've reached the maximum continuous spawn limit
+        if (totalCarsSpawned >= maxContinuousSpawns)
+        {
+            Debug.Log($"Continuous spawning limit reached ({totalCarsSpawned}/{maxContinuousSpawns}). Stopping continuous spawning.");
+            CancelInvoke(nameof(MaintainCarCount)); // Stop continuous spawning
+            return;
+        }
+        
         // Count existing cars (remove destroyed ones)
         GameObject[] existingCars = GameObject.FindGameObjectsWithTag("Car"); // Assumes cars have "Car" tag
         currentCarCount = existingCars.Length;
@@ -143,8 +154,20 @@ public class TrafficSpawner : MonoBehaviour
         if (currentCarCount < targetCarCount)
         {
             int carsNeeded = targetCarCount - currentCarCount;
-            Debug.Log($"Maintaining car count: {currentCarCount}/{targetCarCount}. Spawning {carsNeeded} more cars.");
-            SpawnCarsAtDifferentPoints(carsNeeded);
+            
+            // Limit cars needed to not exceed the maximum spawn limit
+            int remainingSpawns = maxContinuousSpawns - totalCarsSpawned;
+            carsNeeded = Mathf.Min(carsNeeded, remainingSpawns);
+            
+            if (carsNeeded > 0)
+            {
+                Debug.Log($"Maintaining car count: {currentCarCount}/{targetCarCount}. Spawning {carsNeeded} more cars. Total spawned: {totalCarsSpawned}/{maxContinuousSpawns}");
+                SpawnCarsAtDifferentPoints(carsNeeded);
+            }
+            else
+            {
+                Debug.Log($"Cannot spawn more cars - would exceed limit ({totalCarsSpawned}/{maxContinuousSpawns})");
+            }
         }
     }
 
@@ -162,5 +185,31 @@ public class TrafficSpawner : MonoBehaviour
     public int GetCurrentCarCount()
     {
         return currentCarCount;
+    }
+    
+    public int GetTotalCarsSpawned()
+    {
+        return totalCarsSpawned;
+    }
+    
+    public void ResetSpawnCount()
+    {
+        totalCarsSpawned = 0;
+        Debug.Log("Spawn count reset. Continuous spawning can resume.");
+    }
+    
+    public void StopContinuousSpawning()
+    {
+        CancelInvoke(nameof(MaintainCarCount));
+        Debug.Log("Continuous spawning stopped manually.");
+    }
+    
+    public void ResumeContinuousSpawning()
+    {
+        if (continuousSpawning && totalCarsSpawned < maxContinuousSpawns)
+        {
+            InvokeRepeating(nameof(MaintainCarCount), spawnInterval, spawnInterval);
+            Debug.Log("Continuous spawning resumed.");
+        }
     }
 }
