@@ -24,14 +24,14 @@ public class MajorOffenseCounter : MonoBehaviour
         UpdateUI();
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        // Check if we hit an AI car or pedestrian
-        if (collision.gameObject.CompareTag("Car") || collision.gameObject.CompareTag("Pedestrian"))
+        if (other.CompareTag("Pedestrian") || other.CompareTag("CarAI"))
         {
             AddOffense();
         }
     }
+
 
     public void AddOffense()
     {

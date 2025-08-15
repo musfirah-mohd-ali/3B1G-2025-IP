@@ -5,38 +5,49 @@ using UnityEngine.SceneManagement;
 
 public class CutScene : MonoBehaviour
 {
-    [SerializeField] public string[] cutSceneLines;
-    [SerializeField] public Canvas cutSceneCanvas;
-    [SerializeField] public TextMeshProUGUI cutSceneText;
-    [SerializeField] public TextMeshProUGUI promptText;
-    public KeyCode nextKey = KeyCode.E;
+    [Header("Cutscene Lines")]
+    [SerializeField] private string[] cutSceneLines;
 
-    [SerializeField] private string nextScene = "Level1";
+    [Header("UI Elements")]
+    [SerializeField] private Canvas cutSceneCanvas;
+    [SerializeField] private TextMeshProUGUI cutSceneText;
+    [SerializeField] private TextMeshProUGUI promptText;
+
+    [Header("Settings")]
+    public KeyCode nextKey = KeyCode.E;
 
     void Start()
     {
+        if (cutSceneCanvas != null)
+            cutSceneCanvas.enabled = true;
+
         StartCoroutine(PlayCutScene());
     }
 
-    IEnumerator PlayCutScene()
+    private IEnumerator PlayCutScene()
     {
-        cutSceneCanvas.enabled = true;
-
         for (int i = 0; i < cutSceneLines.Length; i++)
         {
-            cutSceneText.text = cutSceneLines[i];
+            if (cutSceneText != null)
+                cutSceneText.text = cutSceneLines[i];
 
-            if (i < cutSceneLines.Length - 1)
-                promptText.text = "Press E to continue";
-            else
-                promptText.text = "Press E to start game";
+            if (promptText != null)
+            {
+                promptText.text = (i < cutSceneLines.Length - 1) 
+                    ? "Press E to continue" 
+                    : "Press E to start game";
+            }
 
-            yield return new WaitUntil(() => Input.GetKeyUp(nextKey));
+            // Wait until player presses the key, frame-safe
             yield return new WaitUntil(() => Input.GetKeyDown(nextKey));
         }
 
-        cutSceneCanvas.enabled = false;
+        // Hide cutscene UI
+        if (cutSceneCanvas != null)
+            cutSceneCanvas.enabled = false;
 
-        SceneManager.LoadScene(nextScene);
+        // Load next scene asynchronously to avoid freezing
+        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        SceneManager.LoadSceneAsync(nextSceneIndex);
     }
 }

@@ -148,11 +148,12 @@ public class PedestrianSpawner : MonoBehaviour
             
             // Spawn pedestrian
             GameObject pedestrian = Instantiate(selectedPedestrianPrefab, spawnPos, spawnRotation);
-            
+
             // Set tag for counting
             if (!string.IsNullOrEmpty(pedestrianTag))
             {
                 pedestrian.tag = pedestrianTag;
+                Debug.Log($"Pedestrian spawned with tag: {pedestrian.tag}");
             }
             
             // Setup AI waypoints - assign manually configured waypoints
