@@ -16,23 +16,14 @@ public class TrafficLightPoints : MonoBehaviour
     public float yellowDuration = 2f;
     public float redDuration = 5f;
     
-    [Header("Traffic Violation Detection")]
-    public bool enableTrafficViolations = true;
-    [Space]
+    [Header("Traffic Violation Penalty")]
+    public int penaltyAmount = 50;  // Customizable penalty amount
+    
     [Header("AI Traffic Control")]
     public bool enableAITrafficControl = true;
-    [Space]
-    [Header("Trigger Zone Size")]
-    public float triggerWidth = 5f;   // X-axis
-    public float triggerLength = 5f;  // Z-axis (forward/backward)
-    public float triggerHeight = 3f;  // Y-axis (up/down)
-    [Space]
-    [Header("Trigger Zone Position")]
-    public Vector3 triggerOffset = Vector3.zero; // Offset from traffic light position
     
     private DeliveryManager deliveryManager;
     private bool carInZone = false;
-    private CarBehaviour detectedCar = null;
     private BoxCollider triggerCollider;
     
     // AI car tracking
@@ -44,59 +35,23 @@ public class TrafficLightPoints : MonoBehaviour
         deliveryManager = FindObjectOfType<DeliveryManager>();
         if (deliveryManager == null)
         {
-            Debug.LogWarning($"[TRAFFIC LIGHT] {name}: No DeliveryManager found - violations disabled");
-            enableTrafficViolations = false;
+            Debug.LogWarning($"[TRAFFIC LIGHT] {name}: No DeliveryManager found - traffic violations may not work properly!");
         }
         
-        // Setup trigger collider for car detection
-        SetupTriggerZone();
+        // Get existing trigger collider (must be manually added in Unity)
+        triggerCollider = GetComponent<BoxCollider>();
+        if (triggerCollider == null)
+        {
+            Debug.LogWarning($"[TRAFFIC LIGHT] {name}: No BoxCollider found! Please add a BoxCollider and set it as a trigger manually.");
+        }
+        else
+        {
+            Debug.Log($"[TRAFFIC LIGHT] {name}: Using existing trigger collider");
+        }
         
         StartCoroutine(TrafficLightCycle());
     }
     
-    private void SetupTriggerZone()
-    {
-        if (!enableTrafficViolations) return;
-        
-        // Get or add BoxCollider
-        triggerCollider = GetComponent<BoxCollider>();
-        if (triggerCollider == null)
-        {
-            triggerCollider = gameObject.AddComponent<BoxCollider>();
-            Debug.Log($"[TRAFFIC LIGHT] {name}: Added new trigger zone");
-        }
-        
-        // Configure the trigger
-        triggerCollider.isTrigger = true;
-        UpdateTriggerSize();
-        
-        Debug.Log($"[TRAFFIC LIGHT] {name}: Trigger zone configured - Width: {triggerWidth}, Length: {triggerLength}, Height: {triggerHeight}");
-    }
-    
-    private void UpdateTriggerSize()
-    {
-        if (triggerCollider != null)
-        {
-            triggerCollider.size = new Vector3(triggerWidth, triggerHeight, triggerLength);
-            triggerCollider.center = triggerOffset;
-        }
-    }
-    
-    // Update trigger size when values change in inspector
-    void OnValidate()
-    {
-        // Ensure positive values
-        triggerWidth = Mathf.Max(0.1f, triggerWidth);
-        triggerLength = Mathf.Max(0.1f, triggerLength);
-        triggerHeight = Mathf.Max(0.1f, triggerHeight);
-        
-        // Update trigger size if we're in play mode
-        if (Application.isPlaying && triggerCollider != null)
-        {
-            UpdateTriggerSize();
-        }
-    }
-
     IEnumerator TrafficLightCycle()
     {
         while (true)
@@ -127,69 +82,27 @@ public class TrafficLightPoints : MonoBehaviour
         return currentLight == LightState.Green;
     }
     
-    // Car detection triggers
+    // Unified car detection trigger - handles both player and AI cars
     void OnTriggerEnter(Collider other)
     {
         Debug.Log($"[TRIGGER DEBUG] {name}: Something entered trigger - Name: '{other.name}', Tag: '{other.tag}'");
         
-        // Handle player car for penalty system
-        if (enableTrafficViolations)
+        if (other.CompareTag("Player"))
         {
-            // Try to find CarBehaviour on the collider, its parent, or its root
-            CarBehaviour playerCar = other.GetComponent<CarBehaviour>();
-            if (playerCar == null)
-            {
-                playerCar = other.GetComponentInParent<CarBehaviour>();
-            }
-            if (playerCar == null)
-            {
-                playerCar = other.transform.root.GetComponent<CarBehaviour>();
-            }
-            
-            Debug.Log($"[TRIGGER DEBUG] {name}: CarBehaviour found: {playerCar != null}");
-            if (playerCar != null)
-            {
-                Debug.Log($"[TRIGGER DEBUG] {name}: CarBehaviour found on object: '{playerCar.gameObject.name}'");
-            }
-            
-            // Check for player car - try multiple tag possibilities
-            if (playerCar != null && (other.CompareTag("Player") || other.CompareTag("Car") || other.name.Contains("Car") || 
-                playerCar.gameObject.CompareTag("Player") || playerCar.gameObject.CompareTag("Car")))
-            {
-                carInZone = true;
-                detectedCar = playerCar;
-                Debug.Log($"[TRAFFIC LIGHT] {name}: Player car entered zone - Light: {currentLight}");
-            }
-            else if (playerCar != null)
-            {
-                Debug.LogWarning($"[TRIGGER DEBUG] {name}: Found CarBehaviour on '{playerCar.gameObject.name}' but tags didn't match. Collider tag: '{other.tag}', CarBehaviour object tag: '{playerCar.gameObject.tag}'");
-            }
+            // This is a PLAYER CAR (has "Player" tag)
+            carInZone = true;
+            Debug.Log($"[TRAFFIC LIGHT] {name}: Player car entered zone - Light: {currentLight}");
         }
-        
-        // Handle AI cars for traffic control (excluding player car)
-        if (enableAITrafficControl)
+        else if (other.CompareTag("Car"))
         {
-            // Check for AI cars with "Car" tag (but not the player car)
-            CarBehaviour carComponent = other.GetComponent<CarBehaviour>();
-            if (carComponent == null)
+            // This is an AI CAR (has "Car" tag)
+            if (enableAITrafficControl && !aiCarsInZone.Contains(other.gameObject))
             {
-                carComponent = other.GetComponentInParent<CarBehaviour>();
-            }
-            if (carComponent == null)
-            {
-                carComponent = other.transform.root.GetComponent<CarBehaviour>();
-            }
-            
-            if (other.CompareTag("Car") && carComponent == null) // AI cars shouldn't have CarBehaviour
-            {
-                if (!aiCarsInZone.Contains(other.gameObject))
-                {
-                    aiCarsInZone.Add(other.gameObject);
-                    Debug.Log($"[AI TRAFFIC] {name}: AI car '{other.name}' entered zone - Light: {currentLight}");
-                    
-                    // Notify AI car about traffic light state
-                    NotifyAICar(other.gameObject, currentLight);
-                }
+                aiCarsInZone.Add(other.gameObject);
+                Debug.Log($"[AI TRAFFIC] {name}: AI car '{other.name}' entered zone - Light: {currentLight}");
+                
+                // Notify AI car about traffic light state
+                NotifyAICar(other.gameObject, currentLight);
             }
         }
     }
@@ -198,65 +111,33 @@ public class TrafficLightPoints : MonoBehaviour
     {
         Debug.Log($"[TRIGGER DEBUG] {name}: Something exited trigger - Name: '{other.name}', Tag: '{other.tag}'");
         
-        // Handle player car for penalty system
-        if (enableTrafficViolations)
+        if (other.CompareTag("Player") && carInZone)
         {
-            // Try to find CarBehaviour on the collider, its parent, or its root
-            CarBehaviour playerCar = other.GetComponent<CarBehaviour>();
-            if (playerCar == null)
+            // This is the PLAYER CAR exiting
+            Debug.Log($"[TRAFFIC LIGHT] {name}: Player car exited zone - Light: {currentLight}");
+            
+            // Check for red light violation (ONLY for player)
+            if (currentLight == LightState.Red)
             {
-                playerCar = other.GetComponentInParent<CarBehaviour>();
+                ApplyTrafficViolationPenalty();
             }
-            if (playerCar == null)
+            else
             {
-                playerCar = other.transform.root.GetComponent<CarBehaviour>();
+                Debug.Log($"[TRAFFIC LIGHT] {name}: No violation - light was {currentLight}");
             }
             
-            // Check if this is the player car that was detected earlier
-            if (playerCar != null && playerCar == detectedCar && 
-                (other.CompareTag("Player") || other.CompareTag("Car") || other.name.Contains("Car") ||
-                playerCar.gameObject.CompareTag("Player") || playerCar.gameObject.CompareTag("Car")))
-            {
-                Debug.Log($"[TRAFFIC LIGHT] {name}: Player car exited zone - Light: {currentLight}");
-                
-                // Check for red light violation (ONLY for player)
-                if (currentLight == LightState.Red)
-                {
-                    ApplyTrafficViolationPenalty();
-                }
-                else
-                {
-                    Debug.Log($"[TRAFFIC LIGHT] {name}: No violation - light was {currentLight}");
-                }
-                
-                carInZone = false;
-                detectedCar = null;
-            }
+            carInZone = false;
         }
-        
-        // Handle AI cars leaving (excluding player car)
-        if (enableAITrafficControl)
+        else if (other.CompareTag("Car"))
         {
-            CarBehaviour carComponent = other.GetComponent<CarBehaviour>();
-            if (carComponent == null)
+            // This is an AI CAR exiting
+            if (enableAITrafficControl && aiCarsInZone.Contains(other.gameObject))
             {
-                carComponent = other.GetComponentInParent<CarBehaviour>();
-            }
-            if (carComponent == null)
-            {
-                carComponent = other.transform.root.GetComponent<CarBehaviour>();
-            }
-            
-            if (other.CompareTag("Car") && carComponent == null) // AI cars shouldn't have CarBehaviour
-            {
-                if (aiCarsInZone.Contains(other.gameObject))
-                {
-                    aiCarsInZone.Remove(other.gameObject);
-                    Debug.Log($"[AI TRAFFIC] {name}: AI car '{other.name}' exited zone");
-                    
-                    // Notify AI car it can resume normal behavior
-                    NotifyAICarExit(other.gameObject);
-                }
+                aiCarsInZone.Remove(other.gameObject);
+                Debug.Log($"[AI TRAFFIC] {name}: AI car '{other.name}' exited zone");
+                
+                // Notify AI car it can resume normal behavior
+                NotifyAICarExit(other.gameObject);
             }
         }
     }
@@ -311,10 +192,15 @@ public class TrafficLightPoints : MonoBehaviour
         Debug.Log($"[VIOLATION] {name}: RED LIGHT VIOLATION! Applying penalty...");
         
         int previousCash = deliveryManager.cash;
-        int penaltyAmount = deliveryManager.trafficViolationPenalty;
         
-        // Apply the penalty
-        deliveryManager.ApplyTrafficViolationPenalty();
+        // Apply the custom penalty amount
+        deliveryManager.cash = Mathf.Max(0, deliveryManager.cash - penaltyAmount);
+        
+        // Update UI
+        if (deliveryManager.cashText != null)
+        {
+            deliveryManager.cashText.text = $"CASH: ${deliveryManager.cash}";
+        }
         
         // Verify UI was updated
         int newCash = deliveryManager.cash;
@@ -372,81 +258,4 @@ public class TrafficLightPoints : MonoBehaviour
         Canvas.ForceUpdateCanvases();
         Debug.Log($"[UI FORCE] {name}: Force update completed");
     }
-    
-    // Visual gizmos for the editor
-    void OnDrawGizmos()
-    {
-        if (!enableTrafficViolations) return;
-        
-        Vector3 triggerSize = new Vector3(triggerWidth, triggerHeight, triggerLength);
-        Vector3 triggerPosition = transform.position + transform.TransformDirection(triggerOffset);
-        
-        // Draw violation detection range
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(triggerPosition, triggerSize);
-        
-        // Draw a semi-transparent cube to show the detection area
-        Gizmos.color = new Color(1f, 1f, 0f, 0.2f); // Yellow with transparency
-        Gizmos.DrawCube(triggerPosition, triggerSize);
-        
-        // Draw line from traffic light to trigger center if offset
-        if (triggerOffset != Vector3.zero)
-        {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(transform.position, triggerPosition);
-            Gizmos.DrawWireSphere(triggerPosition, 0.2f);
-        }
-    }
-    
-    void OnDrawGizmosSelected()
-    {
-        if (!enableTrafficViolations) return;
-        
-        Vector3 triggerSize = new Vector3(triggerWidth, triggerHeight, triggerLength);
-        Vector3 triggerPosition = transform.position + transform.TransformDirection(triggerOffset);
-        
-        // Draw a more prominent visualization when selected
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(triggerPosition, triggerSize);
-        
-        // Draw detection range with current light color
-        switch (currentLight)
-        {
-            case LightState.Green:
-                Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
-                break;
-            case LightState.Yellow:
-                Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-                break;
-            case LightState.Red:
-                Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
-                break;
-        }
-        Gizmos.DrawCube(triggerPosition, triggerSize);
-        
-        // Draw offset indicators when selected
-        if (triggerOffset != Vector3.zero)
-        {
-            // Draw connection line
-            Gizmos.color = Color.white;
-            Gizmos.DrawLine(transform.position, triggerPosition);
-            
-            // Draw offset vector components
-            Gizmos.color = Color.red;
-            if (triggerOffset.x != 0) Gizmos.DrawRay(transform.position, transform.right * triggerOffset.x);
-            Gizmos.color = Color.green;
-            if (triggerOffset.y != 0) Gizmos.DrawRay(transform.position, transform.up * triggerOffset.y);
-            Gizmos.color = Color.blue;
-            if (triggerOffset.z != 0) Gizmos.DrawRay(transform.position, transform.forward * triggerOffset.z);
-        }
-        
-        // Draw car detection status
-        if (carInZone && detectedCar != null)
-        {
-            Gizmos.color = Color.white;
-            Gizmos.DrawLine(triggerPosition, detectedCar.transform.position);
-            Gizmos.DrawWireSphere(detectedCar.transform.position, 1f);
-        }
-    }
-
 }

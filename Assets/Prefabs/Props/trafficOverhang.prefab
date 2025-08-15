@@ -533,6 +533,8 @@ MonoBehaviour:
   greenDuration: 10
   yellowDuration: 2
   redDuration: 5
+  enableTrafficViolations: 1
+  enableAITrafficControl: 1
 --- !u!65 &6157929492129634797
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -552,5 +554,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 24.768494, y: 5.829216, z: 18.43855}
-  m_Center: {x: -17.020111, y: -2.414608, z: -5.176841}
+  m_Size: {x: 28.338623, y: 7.9173346, z: 19.789871}
+  m_Center: {x: -15.235046, y: -3.4586673, z: -5.852501}

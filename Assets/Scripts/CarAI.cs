@@ -274,14 +274,22 @@ public class CarAI : MonoBehaviour
         // Ensure current waypoint index is valid
         if (currentWaypointIndex >= waypoints.Length)
         {
-            currentWaypointIndex = 0;
+            Debug.Log($"CarAI {gameObject.name}: Reached end of waypoint path, destroying car...");
+            Destroy(gameObject);
+            yield break;
         }
         
         // Ensure the waypoint exists
         if (waypoints[currentWaypointIndex] == null)
         {
             Debug.LogError($"CarAI {gameObject.name}: Waypoint {currentWaypointIndex} is null!");
-            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            currentWaypointIndex++;
+            if (currentWaypointIndex >= waypoints.Length)
+            {
+                Debug.Log($"CarAI {gameObject.name}: No valid waypoints found, destroying car...");
+                Destroy(gameObject);
+                yield break;
+            }
             yield break;
         }
 
@@ -292,7 +300,13 @@ public class CarAI : MonoBehaviour
         if (!agent.CalculatePath(targetPosition, testPath) || testPath.status != NavMeshPathStatus.PathComplete)
         {
             Debug.LogWarning($"CarAI {gameObject.name}: Cannot reach waypoint {currentWaypointIndex}, trying next one...");
-            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            currentWaypointIndex++;
+            if (currentWaypointIndex >= waypoints.Length)
+            {
+                Debug.Log($"CarAI {gameObject.name}: No reachable waypoints remaining, destroying car...");
+                Destroy(gameObject);
+                yield break;
+            }
             yield return StartCoroutine(GoToNextWaypointCoroutine());
             yield break;
         }
@@ -307,7 +321,16 @@ public class CarAI : MonoBehaviour
             Debug.Log($"CarAI {gameObject.name}: Moving to waypoint {currentWaypointIndex} at {targetPosition}");
         }
         
-        currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+        // Move to next waypoint or destroy if this was the last one
+        currentWaypointIndex++;
+        if (currentWaypointIndex >= waypoints.Length)
+        {
+            Debug.Log($"CarAI {gameObject.name}: Reached final waypoint, destroying car...");
+            // Wait a moment to ensure the car reaches the waypoint before destroying
+            yield return new WaitForSeconds(1f);
+            Destroy(gameObject);
+            yield break;
+        }
         
         // Wait a frame to ensure destination is set
         yield return null;
