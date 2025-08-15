@@ -30,10 +30,18 @@ public class DeliveryManager : MonoBehaviour
     [Header("UI References")]
     public TextMeshProUGUI itemsText;
     public TextMeshProUGUI cashText;
+    
+    [Header("Delivery Marker UI")]
+    public GameObject deliveryMarkerUI; // UI panel containing the marker elements
+    public RectTransform deliveryArrow; // Arrow pointing to delivery location
+    public TextMeshProUGUI distanceText; // Shows distance to delivery
+    public TextMeshProUGUI locationNameText; // Shows delivery location name
+    public Camera playerCamera; // Reference to player camera for calculations
 
     private bool hasPackage = false;
     private Transform currentTarget;
     private int currentTargetIndex = -1;
+    private int previousTargetIndex = -1; // Track previous delivery location
     private GameObject currentDeliveryZone;
     private bool playerInZone = false;
     private float deliveryTimer = 0f;
@@ -43,6 +51,22 @@ public class DeliveryManager : MonoBehaviour
     {
         // Initialize UI with current values from inspector
         UpdateUI();
+        
+        // Auto-find player camera if not assigned
+        if (playerCamera == null)
+        {
+            playerCamera = Camera.main;
+            if (playerCamera == null)
+            {
+                playerCamera = FindObjectOfType<Camera>();
+            }
+        }
+        
+        // Hide delivery marker initially
+        if (deliveryMarkerUI != null)
+        {
+            deliveryMarkerUI.SetActive(false);
+        }
     }
 
     void Update()
@@ -50,6 +74,12 @@ public class DeliveryManager : MonoBehaviour
         if (hasPackage && playerInZone)
         {
             UpdateDeliveryTimer();
+        }
+        
+        // Update delivery marker if player has package
+        if (hasPackage && currentTarget != null)
+        {
+            UpdateDeliveryMarker();
         }
     }
 
@@ -64,6 +94,7 @@ public class DeliveryManager : MonoBehaviour
         hasPackage = true;
         SelectRandomTarget();
         CreateDeliveryZone();
+        ShowDeliveryMarker();
         Debug.Log($"Package picked up! Deliver it to: {GetCurrentLocationName()}");
 
         if (deliveryTimerUI != null)
@@ -74,8 +105,33 @@ public class DeliveryManager : MonoBehaviour
     
     private void SelectRandomTarget()
     {
-        currentTargetIndex = Random.Range(0, deliveryTargets.Length);
+        // If there's only one target, we have no choice
+        if (deliveryTargets.Length <= 1)
+        {
+            currentTargetIndex = 0;
+            currentTarget = deliveryTargets[currentTargetIndex];
+            return;
+        }
+        
+        int newTargetIndex;
+        int maxAttempts = 20; // Prevent infinite loops
+        int attempts = 0;
+        
+        do
+        {
+            newTargetIndex = Random.Range(0, deliveryTargets.Length);
+            attempts++;
+        } 
+        while (newTargetIndex == previousTargetIndex && attempts < maxAttempts);
+        
+        // Update previous target index for next delivery
+        previousTargetIndex = currentTargetIndex;
+        
+        // Set new target
+        currentTargetIndex = newTargetIndex;
         currentTarget = deliveryTargets[currentTargetIndex];
+        
+        Debug.Log($"Selected delivery target {currentTargetIndex} (previous was {previousTargetIndex})");
     }
     
     private void CreateDeliveryZone()
@@ -130,6 +186,73 @@ public class DeliveryManager : MonoBehaviour
             return locationNames[currentTargetIndex];
         return $"Location {currentTargetIndex + 1}";
     }
+    
+    private void ShowDeliveryMarker()
+    {
+        if (deliveryMarkerUI != null)
+        {
+            deliveryMarkerUI.SetActive(true);
+            
+            // Update location name text
+            if (locationNameText != null)
+            {
+                locationNameText.text = GetCurrentLocationName();
+            }
+        }
+    }
+    
+    private void HideDeliveryMarker()
+    {
+        if (deliveryMarkerUI != null)
+        {
+            deliveryMarkerUI.SetActive(false);
+        }
+    }
+    
+    private void UpdateDeliveryMarker()
+    {
+        if (playerCamera == null || currentTarget == null || deliveryMarkerUI == null)
+            return;
+            
+        // Calculate distance to target
+        Vector3 playerPosition = playerCamera.transform.position;
+        Vector3 targetPosition = currentTarget.position;
+        float distance = Vector3.Distance(playerPosition, targetPosition);
+        
+        // Update distance text
+        if (distanceText != null)
+        {
+            if (distance < 1000f)
+            {
+                distanceText.text = $"{distance:F0}m";
+            }
+            else
+            {
+                distanceText.text = $"{distance / 1000f:F1}km";
+            }
+        }
+        
+        // Update arrow direction
+        if (deliveryArrow != null)
+        {
+            // Get direction to target
+            Vector3 direction = (targetPosition - playerPosition).normalized;
+            
+            // Convert to screen space direction
+            Vector3 forward = playerCamera.transform.forward;
+            Vector3 right = playerCamera.transform.right;
+            
+            // Project direction onto camera's forward and right vectors
+            float forwardDot = Vector3.Dot(direction, forward);
+            float rightDot = Vector3.Dot(direction, right);
+            
+            // Calculate angle for arrow rotation
+            float angle = Mathf.Atan2(rightDot, forwardDot) * Mathf.Rad2Deg;
+            
+            // Apply rotation to arrow
+            deliveryArrow.rotation = Quaternion.Euler(0, 0, angle - 90f); // -90 to correct for arrow pointing up by default
+        }
+    }
 
     private void UpdateDeliveryTimer()
     {
@@ -180,6 +303,9 @@ public class DeliveryManager : MonoBehaviour
 
         // Update UI
         UpdateUI();
+        
+        // Hide delivery marker
+        HideDeliveryMarker();
 
         // Reset delivery state
         hasPackage = false;
