@@ -3,8 +3,12 @@ using TMPro;
 
 public class Timer : MonoBehaviour
 {
+    [Header("UI Elements")]
     public GameObject timerUI;
     public TextMeshProUGUI timerText;
+
+    [Header("Timer Settings")]
+    [Tooltip("Set the duration of the timer in seconds")]
     public float maxTime = 30f;
 
     private float currentTime;
@@ -12,8 +16,7 @@ public class Timer : MonoBehaviour
 
     void Start()
     {
-        // Hide timer UI at start
-        timerUI.SetActive(false);
+        StartTimer();
     }
 
     void Update()
@@ -37,23 +40,30 @@ public class Timer : MonoBehaviour
         currentTime = maxTime;
         timerRunning = true;
 
-        // Show the whole timer UI (image + text)
-        timerUI.SetActive(true);
+    
+        if (timerUI != null)
+            timerUI.SetActive(true);
+
+        UpdateUI();
     }
 
     public void StopTimer()
     {
         timerRunning = false;
 
-        // Hide the whole timer UI
-        timerUI.SetActive(false);
+
+        if (timerUI != null)
+            timerUI.SetActive(false);
     }
 
     private void UpdateUI()
     {
-        int minutes = Mathf.FloorToInt(currentTime / 60);
-        int seconds = Mathf.FloorToInt(currentTime % 60);
-        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        if (timerText != null)
+        {
+            int minutes = Mathf.FloorToInt(currentTime / 60);
+            int seconds = Mathf.FloorToInt(currentTime % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
     }
 
     public void OnPackageDelivered()
