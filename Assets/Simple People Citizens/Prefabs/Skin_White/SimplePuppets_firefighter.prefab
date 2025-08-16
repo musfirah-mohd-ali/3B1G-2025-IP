@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5128423225695109277}
   m_Layer: 0
   m_Name: SimplePuppets_firefighter
-  m_TagString: Untagged
+  m_TagString: Pedestrian
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -66,9 +66,12 @@ GameObject:
   m_Component:
   - component: {fileID: 5128423225733628066}
   - component: {fileID: 5128423225733628067}
+  - component: {fileID: 8299398472087032672}
+  - component: {fileID: 6973474221117641491}
+  - component: {fileID: 3298222546071079627}
   m_Layer: 0
   m_Name: body_firefighter
-  m_TagString: Untagged
+  m_TagString: Pedestrian
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -82,8 +85,8 @@ Transform:
   m_GameObject: {fileID: 5128423225733628093}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0, y: -0.22, z: -0.10358}
+  m_LocalScale: {x: 0.44143, y: 0.52728814, z: 0.44143}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5128423225695109276}
@@ -146,6 +149,78 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 1.037106, z: -0.078590214}
     m_Extent: {x: 0.54925704, y: 1.037106, z: 0.627847}
   m_DirtyAABB: 0
+--- !u!136 &8299398472087032672
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5128423225733628093}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.4813839
+  m_Height: 4.8940334
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.4470167, z: -0.18543096}
+--- !u!64 &6973474221117641491
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5128423225733628093}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!54 &3298222546071079627
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5128423225733628093}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5128423226283183135
 GameObject:
   m_ObjectHideFlags: 0

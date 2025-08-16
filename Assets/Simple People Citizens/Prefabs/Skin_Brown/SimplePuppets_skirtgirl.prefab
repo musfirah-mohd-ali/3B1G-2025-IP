@@ -41,6 +41,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3579263793272451853}
   - component: {fileID: 3579263793272451852}
+  - component: {fileID: 2396110273865889155}
+  - component: {fileID: 3776322408949570850}
+  - component: {fileID: 7265663204298908999}
   m_Layer: 0
   m_Name: body_skirtgirl
   m_TagString: Pedestrian
@@ -57,8 +60,8 @@ Transform:
   m_GameObject: {fileID: 3579263793272451850}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.17, y: -0.25, z: 0.0056305}
+  m_LocalScale: {x: 0.43434, y: 0.51821107, z: 0.43434}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3579263794066607579}
@@ -121,6 +124,78 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.14001632, y: 1.0951144, z: 0.004224479}
     m_Extent: {x: 0.66120595, y: 1.0951144, z: 0.5211895}
   m_DirtyAABB: 0
+--- !u!136 &2396110273865889155
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3579263793272451850}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.5600935
+  m_Height: 5.167771
+  m_Direction: 1
+  m_Center: {x: -0.33036384, y: 2.5838854, z: 0.009967516}
+--- !u!54 &3776322408949570850
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3579263793272451850}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &7265663204298908999
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3579263793272451850}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &3579263793672577263
 GameObject:
   m_ObjectHideFlags: 0

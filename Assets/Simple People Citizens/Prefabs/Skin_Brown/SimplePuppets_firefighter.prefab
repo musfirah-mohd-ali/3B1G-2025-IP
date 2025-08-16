@@ -41,6 +41,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1462232560666742793}
   - component: {fileID: 1462232560666742794}
+  - component: {fileID: 1676522576450111392}
+  - component: {fileID: 100478843519730798}
+  - component: {fileID: 9180253600193491903}
   m_Layer: 0
   m_Name: body_firefighter
   m_TagString: Pedestrian
@@ -57,8 +60,8 @@ Transform:
   m_GameObject: {fileID: 1462232560666742792}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0, y: -0.44, z: -0.073425}
+  m_LocalScale: {x: 0.60403, y: 0.60403, z: 0.60403}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1462232561169814697}
@@ -121,6 +124,78 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 1.037106, z: -0.078590214}
     m_Extent: {x: 0.54925704, y: 1.037106, z: 0.627847}
   m_DirtyAABB: 0
+--- !u!54 &1676522576450111392
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462232560666742792}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!136 &100478843519730798
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462232560666742792}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.4813839
+  m_Height: 4.8940334
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.4470167, z: -0.18543096}
+--- !u!64 &9180253600193491903
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462232560666742792}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &1462232561120991256
 GameObject:
   m_ObjectHideFlags: 0
