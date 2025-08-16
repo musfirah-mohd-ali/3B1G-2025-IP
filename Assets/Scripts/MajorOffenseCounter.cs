@@ -6,18 +6,17 @@ public class MajorOffenseCounter : MonoBehaviour
 {
     [Header("Settings")]
     public int maxOffenses = 3;
-    [SerializeField]
-    public int badEndingSceneIndex = 3;  // Scene index in Build Settings
-    
+
     [Header("UI")]
     public TextMeshProUGUI offenseCounterText;
-    
+
     private int currentOffenseCount = 0;
     public static MajorOffenseCounter Instance;
 
     void Awake()
     {
         Instance = this;
+        SceneTracker.RecordScene(); // Remember the scene player is in
     }
 
     void Start()
@@ -34,7 +33,6 @@ public class MajorOffenseCounter : MonoBehaviour
         }
     }
 
-
     public void AddOffense()
     {
         currentOffenseCount++;
@@ -42,7 +40,7 @@ public class MajorOffenseCounter : MonoBehaviour
         
         UpdateUI();
         
-        if (currentOffenseCount == maxOffenses)
+        if (currentOffenseCount >= maxOffenses)
         {
             LoadBadEnding();
         }
@@ -51,14 +49,12 @@ public class MajorOffenseCounter : MonoBehaviour
     void UpdateUI()
     {
         if (offenseCounterText != null)
-        {
             offenseCounterText.text = $"Major Offenses: {currentOffenseCount}/{maxOffenses}";
-        }
     }
 
     void LoadBadEnding()
     {
-        Debug.Log($"Loading bad ending scene (Index: {badEndingSceneIndex})...");
-        SceneManager.LoadScene(badEndingSceneIndex);
+        Debug.Log("Loading BadEnding scene...");
+        SceneManager.LoadScene("BadEnding"); // Use scene name
     }
 }

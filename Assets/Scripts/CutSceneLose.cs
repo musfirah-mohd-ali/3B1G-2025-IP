@@ -15,7 +15,7 @@ public class CutSceneLose : MonoBehaviour
     [Header("Controls")]
     public KeyCode prevKey = KeyCode.A;
     public KeyCode nextKey = KeyCode.D;
-    public KeyCode restartKey = KeyCode.E; // after losing, press E to restart or go back to menu
+    public KeyCode restartKey = KeyCode.E;
 
     private int currentIndex = 0;
 
@@ -25,10 +25,7 @@ public class CutSceneLose : MonoBehaviour
             cutSceneCanvas.enabled = true;
 
         if (loseLines == null || loseLines.Length == 0)
-        {
-            Debug.LogError("CutSceneLose: loseLines is empty! Assign text in the inspector.");
             loseLines = new string[] { "No lose lines assigned!" };
-        }
 
         currentIndex = 0;
         UpdateText();
@@ -50,7 +47,7 @@ public class CutSceneLose : MonoBehaviour
 
         if (Input.GetKeyDown(restartKey) && currentIndex == loseLines.Length - 1)
         {
-            ReloadGame();
+            ReloadPreviousLevel();
         }
     }
 
@@ -68,12 +65,20 @@ public class CutSceneLose : MonoBehaviour
         }
     }
 
-    void ReloadGame()
+    void ReloadPreviousLevel()
     {
         if (cutSceneCanvas != null)
             cutSceneCanvas.enabled = false;
 
-        // reload the first scene (0) or whatever you want
-        SceneManager.LoadScene(0);
+        if (!string.IsNullOrEmpty(SceneTracker.lastSceneName))
+        {
+            Debug.Log($"Reloading previous scene: {SceneTracker.lastSceneName}");
+            SceneManager.LoadScene(SceneTracker.lastSceneName);
+        }
+        else
+        {
+            Debug.LogWarning("SceneTracker.lastSceneName is empty! Reloading default scene.");
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 }
