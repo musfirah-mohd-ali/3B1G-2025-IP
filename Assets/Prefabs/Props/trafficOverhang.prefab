@@ -33,6 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3004806067544195699}
+  - {fileID: 3887976287635693153}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3457360765343428146
@@ -533,8 +534,9 @@ MonoBehaviour:
   greenDuration: 10
   yellowDuration: 2
   redDuration: 5
-  enableTrafficViolations: 1
+  penaltyAmount: 50
   enableAITrafficControl: 1
+  policeSpawner: {fileID: 0}
 --- !u!65 &6157929492129634797
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -556,3 +558,54 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 28.338623, y: 7.9173346, z: 19.789871}
   m_Center: {x: -15.235046, y: -3.4586673, z: -5.852501}
+--- !u!1 &6777180812681445968
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3887976287635693153}
+  - component: {fileID: 6599796059499649082}
+  m_Layer: 0
+  m_Name: PoliceSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3887976287635693153
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6777180812681445968}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -32.23, y: 0.79, z: -6.5248413}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1753264581752775063}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6599796059499649082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6777180812681445968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bc6a848cc35e53419b5a222dacdb3c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  policePrefab: {fileID: 0}
+  spawnPoints:
+  - {fileID: 3887976287635693153}
+  minPolice: 1
+  maxPolice: 1
+  spawnRandomAmount: 1
+  chaseSpeed: 8

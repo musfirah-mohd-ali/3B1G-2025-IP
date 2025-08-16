@@ -15,7 +15,8 @@ public class PoliceSpawner : MonoBehaviour
 
     void Start()
     {
-        SpawnPolice();
+        // Police will only spawn when called by TrafficLightPoints on red light violation with package
+        // Remove automatic spawning to ensure police only appear when appropriate
     }
 
     public void SpawnPolice()

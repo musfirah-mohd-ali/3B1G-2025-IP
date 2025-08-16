@@ -85,7 +85,12 @@ public class TrafficLightPoints : MonoBehaviour
             if (currentLight == LightState.Red)
             {
                 ApplyTrafficViolationPenalty();
-                SpawnPoliceChaser(); // Spawn police on red light violation
+                
+                // Only spawn police if player has a package
+                if (deliveryManager != null && deliveryManager.HasPackage())
+                {
+                    SpawnPoliceChaser(); // Spawn police on red light violation with package
+                }
             }
             carInZone = false;
         }

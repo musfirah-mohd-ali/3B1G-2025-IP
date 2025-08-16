@@ -1,219 +1,193 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class PedestrianAI : MonoBehaviour
 {
-    [Header("Waypoint Navigation")]
-    [SerializeField] public Transform[] waypoints; // Manually assigned waypoint transforms (empty GameObjects) - public for spawner access
-    
-    [Header("Movement Settings")]
+    [Header("Movement & Speed")]
     public float walkSpeed = 3.5f;
     public float runSpeed = 6f;
-    public float waypointReachDistance = 1f; // Distance to consider waypoint reached
-    public float waitTimeAtWaypoint = 2f; // Time to wait at each waypoint
+    public float waypointReachDistance = 1f;
+    public float waitTimeAtWaypoint = 2f;
     
     [Header("Behavior Settings")]
-    public bool randomWaypoints = false; // If true, chooses random waypoints instead of sequential
-    public bool shouldWaitAtWaypoints = true; // If true, pauses at waypoints
+    public bool randomWaypoints = false;
+    public bool shouldWaitAtWaypoints = true;
     
+    [Header("Performance")]
+    public float updateInterval = 0.1f;
+    
+    [Header("Waypoints")]
+    [SerializeField] public Transform[] waypoints; // Public for spawner access
+
+    // Core components
     private NavMeshAgent agent;
     private int currentWaypointIndex = 0;
-    private bool isWaiting = false;
-    private float waitTimer = 0f;
+    
+    // Coroutine management
+    private Coroutine navigationCoroutine;
 
-    void Start()
+    void Start() => StartCoroutine(Initialize());
+
+    IEnumerator Initialize()
     {
         agent = GetComponent<NavMeshAgent>();
         
-        // Validate NavMeshAgent component
+        if (!ValidateSetup()) yield break;
+        
+        SetupAgent();
+        
+        if (waypoints?.Length > 0)
+            StartNavigation();
+        else
+            Debug.LogWarning($"{name}: No waypoints assigned!");
+    }
+
+    bool ValidateSetup()
+    {
         if (agent == null)
         {
-            Debug.LogError($"{gameObject.name}: No NavMeshAgent component found! Please add NavMeshAgent to the pedestrian prefab.");
-            return;
+            Debug.LogError($"{name}: No NavMeshAgent component found!");
+            return false;
         }
         
-        // Configure NavMeshAgent for pedestrian movement
-        agent.updateRotation = true; // Let NavMeshAgent handle rotation
-        agent.speed = walkSpeed;
-        agent.stoppingDistance = 0.2f;
-        agent.angularSpeed = 120f; // Slower turning for realistic pedestrian movement
-        agent.acceleration = 8f; // Default acceleration
-        agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
-        
-        // Check if on NavMesh
         if (!agent.isOnNavMesh)
         {
-            Debug.LogError($"{gameObject.name}: Pedestrian is not on NavMesh! Make sure the spawn position is on a NavMesh surface.");
-            return;
+            Debug.LogError($"{name}: Not on NavMesh!");
+            return false;
         }
         
-        // Get waypoints from manually assigned transforms
-        if (waypoints != null && waypoints.Length > 0)
-        {
-            GoToNextWaypoint();
-        }
-        else
-        {
-            Debug.LogWarning($"{gameObject.name}: No waypoints assigned! Please assign waypoint transforms to the waypoints array.");
-        }
-    }
-    
-    void Update()
-    {
-        // Early exit if no agent or not on NavMesh
-        if (agent == null || !agent.isOnNavMesh)
-            return;
-        
-        // Early exit if no waypoints assigned
-        if (waypoints == null || waypoints.Length == 0)
-            return;
-            
-        // Handle waiting at waypoints
-        if (isWaiting)
-        {
-            waitTimer -= Time.deltaTime;
-            if (waitTimer <= 0f)
-            {
-                isWaiting = false;
-                GoToNextWaypoint();
-            }
-            return;
-        }
-        
-        // Check if we've reached the current waypoint
-        if (!agent.pathPending && agent.remainingDistance < waypointReachDistance)
-        {
-            if (shouldWaitAtWaypoints)
-            {
-                StartWaiting();
-            }
-            else
-            {
-                GoToNextWaypoint();
-            }
-        }
+        return true;
     }
 
-    void GoToNextWaypoint()
+    void SetupAgent()
     {
-        
-        if (waypoints == null || waypoints.Length == 0)
-        {
-            Debug.LogError($"{gameObject.name}: No waypoints available!");
-            return;
-        }
-        
-        if (agent == null || !agent.isOnNavMesh)
-        {
-            Debug.LogError($"{gameObject.name}: NavMeshAgent is null or not on NavMesh!");
-            return;
-        }
-
-        if (randomWaypoints)
-        {
-            // Choose a random waypoint (but not the current one)
-            int newIndex;
-            do
-            {
-                newIndex = Random.Range(0, waypoints.Length);
-            } while (newIndex == currentWaypointIndex && waypoints.Length > 1);
-            
-            currentWaypointIndex = newIndex;
-        }
-        else
-        {
-            // Go to next waypoint in sequence
-            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
-        }
-        
-        if (waypoints[currentWaypointIndex] != null)
-        {
-            Vector3 targetPosition = waypoints[currentWaypointIndex].position;
-            
-            // Check if the target position is valid on NavMesh
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(targetPosition, out hit, 2f, NavMesh.AllAreas))
-            {
-                agent.SetDestination(hit.position);
-            }
-            else
-            {
-                Debug.LogError($"{gameObject.name}: Waypoint {currentWaypointIndex} at {targetPosition} is not on NavMesh!");
-                // Try next waypoint
-                if (waypoints.Length > 1)
-                {
-                    GoToNextWaypoint();
-                }
-            }
-        }
-        else
-        {
-            Debug.LogError($"{gameObject.name}: Waypoint {currentWaypointIndex} is null!");
-        }
-    }
-    
-    void StartWaiting()
-    {
-        isWaiting = true;
-        waitTimer = waitTimeAtWaypoint;
-    }
-    
-    // Public methods to control pedestrian behavior
-    public void SetWalkSpeed()
-    {
+        agent.updateRotation = true;
         agent.speed = walkSpeed;
+        agent.stoppingDistance = 0.2f;
+        agent.angularSpeed = 120f;
+        agent.acceleration = 8f;
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
     }
     
-    public void SetRunSpeed()
+    void StartNavigation()
     {
-        agent.speed = runSpeed;
+        if (navigationCoroutine != null) StopCoroutine(navigationCoroutine);
+        navigationCoroutine = StartCoroutine(NavigationLoop());
     }
-    
-    public void StopMovement()
+
+    void StopNavigation()
     {
-        agent.isStopped = true;
+        if (navigationCoroutine != null)
+        {
+            StopCoroutine(navigationCoroutine);
+            navigationCoroutine = null;
+        }
     }
-    
-    public void ResumeMovement()
+
+    IEnumerator NavigationLoop()
     {
-        agent.isStopped = false;
+        var wait = new WaitForSeconds(updateInterval);
+        
+        while (agent?.isOnNavMesh == true && waypoints?.Length > 0)
+        {
+            if (!agent.pathPending && agent.remainingDistance < waypointReachDistance)
+            {
+                if (shouldWaitAtWaypoints)
+                    yield return new WaitForSeconds(waitTimeAtWaypoint);
+                
+                yield return GoToNextWaypoint();
+            }
+            
+            yield return wait;
+        }
+    }
+
+    IEnumerator GoToNextWaypoint()
+    {
+        if (waypoints?.Length == 0 || agent?.isOnNavMesh != true) yield break;
+
+        currentWaypointIndex = GetNextWaypointIndex();
+        
+        if (waypoints[currentWaypointIndex] == null)
+        {
+            Debug.LogError($"{name}: Waypoint {currentWaypointIndex} is null!");
+            yield break;
+        }
+
+        Vector3 targetPosition = waypoints[currentWaypointIndex].position;
+        
+        if (IsValidNavMeshPosition(targetPosition, out Vector3 validPosition))
+        {
+            agent.SetDestination(validPosition);
+        }
+        else
+        {
+            Debug.LogError($"{name}: Waypoint {currentWaypointIndex} not on NavMesh!");
+            if (waypoints.Length > 1) yield return GoToNextWaypoint();
+        }
+    }
+
+    int GetNextWaypointIndex()
+    {
+        if (randomWaypoints && waypoints.Length > 1)
+        {
+            int newIndex;
+            do { newIndex = Random.Range(0, waypoints.Length); }
+            while (newIndex == currentWaypointIndex);
+            return newIndex;
+        }
+        
+        return (currentWaypointIndex + 1) % waypoints.Length;
+    }
+
+    bool IsValidNavMeshPosition(Vector3 position, out Vector3 validPosition)
+    {
+        return NavMesh.SamplePosition(position, out NavMeshHit hit, 2f, NavMesh.AllAreas) 
+            ? (validPosition = hit.position) != Vector3.zero : (validPosition = Vector3.zero) == Vector3.zero;
     }
     
-    // Method to reinitialize pedestrian with new waypoints (used by spawner)
+    // Public API
+    public void SetWalkSpeed() => agent.speed = walkSpeed;
+    public void SetRunSpeed() => agent.speed = runSpeed;
+    public void StopMovement() => agent.isStopped = true;
+    public void ResumeMovement() => agent.isStopped = false;
+    
     public void InitializeWithWaypoints(Transform[] newWaypoints)
     {
-        if (newWaypoints != null && newWaypoints.Length > 0)
+        if (newWaypoints?.Length == 0)
         {
-            // Validate all waypoints are not null
-            for (int i = 0; i < newWaypoints.Length; i++)
-            {
-                if (newWaypoints[i] == null)
-                {
-                    Debug.LogError($"{gameObject.name}: Waypoint {i} in array is NULL!");
-                    return;
-                }
-            }
-            
-            waypoints = newWaypoints;
-            
-            // Reset movement state
-            currentWaypointIndex = 0;
-            isWaiting = false;
-            waitTimer = 0f;
-            
-            // Start movement if we have an agent and are on NavMesh
-            if (agent != null && agent.isOnNavMesh && waypoints.Length > 0)
-            {
-                GoToNextWaypoint();
-            }
-            else
-            {
-                Debug.LogWarning($"{gameObject.name}: Cannot start movement - check NavMesh and waypoints");
-            }
+            Debug.LogError($"{name}: Invalid waypoints array!");
+            return;
         }
+        
+        if (!ValidateWaypoints(newWaypoints)) return;
+        
+        StopNavigation();
+        waypoints = newWaypoints;
+        currentWaypointIndex = 0;
+        
+        if (agent?.isOnNavMesh == true)
+            StartNavigation();
         else
-        {
-            Debug.LogError($"{gameObject.name}: InitializeWithWaypoints called with null or empty waypoints array");
-        }
+            Debug.LogWarning($"{name}: Cannot start - check NavMesh!");
     }
+
+    bool ValidateWaypoints(Transform[] waypointsToValidate)
+    {
+        for (int i = 0; i < waypointsToValidate.Length; i++)
+        {
+            if (waypointsToValidate[i] == null)
+            {
+                Debug.LogError($"{name}: Waypoint {i} is NULL!");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Lifecycle
+    void OnDestroy() => StopNavigation();
+    void OnDisable() => StopNavigation();
+    void OnEnable() { if (waypoints?.Length > 0 && agent?.isOnNavMesh == true) StartNavigation(); }
 }

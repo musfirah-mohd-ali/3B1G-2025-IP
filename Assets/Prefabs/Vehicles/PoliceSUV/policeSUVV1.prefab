@@ -375,6 +375,8 @@ GameObject:
   - component: {fileID: 226677930351676138}
   - component: {fileID: 4251417899826667622}
   - component: {fileID: 6745523167370776599}
+  - component: {fileID: 7933966063265703616}
+  - component: {fileID: 2704362524213082957}
   m_Layer: 0
   m_Name: policeSUVV1
   m_TagString: Police
@@ -486,7 +488,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3363fdcfb85b658409f96f430cc2e88f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  chaseSpeed: 8
+  stoppingDistance: 2
+  rotationOffset: -90
+  rotationSpeed: 15
+  useInstantRotation: 1
+  collisionDistance: 2
+  updateInterval: 0.1
+  rotationUpdateInterval: 0.05
+  packageLossUI: {fileID: 0}
+--- !u!195 &7933966063265703616
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739988216329005887}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 2.4039361
+  m_Speed: 10
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.7679441
+  m_BaseOffset: 0.88397205
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!65 &2704362524213082957
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739988216329005887}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.1895733, y: 1.5821831, z: 4.5210457}
+  m_Center: {x: 3.9849634, y: 0.09288049, z: -0.005678177}
 --- !u!1 &1837258668875096132
 GameObject:
   m_ObjectHideFlags: 0

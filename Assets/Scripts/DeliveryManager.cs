@@ -348,6 +348,36 @@ public class DeliveryManager : MonoBehaviour
     public Transform GetCurrentTarget() => currentTarget;
     public bool HasPackage() => hasPackage;
 
+    public void LosePackage()
+    {
+        if (hasPackage)
+        {
+            hasPackage = false;
+            
+            // Clear current delivery target
+            currentTarget = null;
+            currentTargetIndex = -1;
+            
+            // Destroy current delivery zone if it exists
+            if (currentDeliveryZone != null)
+            {
+                Destroy(currentDeliveryZone);
+                currentDeliveryZone = null;
+            }
+            
+            // Hide delivery marker UI
+            if (deliveryMarkerUI != null)
+            {
+                deliveryMarkerUI.SetActive(false);
+            }
+            
+            // Update UI
+            UpdateUI();
+            
+            Debug.Log("Package lost due to police collision!");
+        }
+    }
+
     public string GetDeliveryStatus()
     {
         if (!hasPackage) return "No package";
