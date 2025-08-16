@@ -229,7 +229,7 @@ GameObject:
   - component: {fileID: 6321853318955527411}
   m_Layer: 0
   m_Name: PoliceSUVWheels
-  m_TagString: Untagged
+  m_TagString: Police
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -374,9 +374,10 @@ GameObject:
   - component: {fileID: 2648579653649350176}
   - component: {fileID: 226677930351676138}
   - component: {fileID: 4251417899826667622}
+  - component: {fileID: 6745523167370776599}
   m_Layer: 0
   m_Name: policeSUVV1
-  m_TagString: Untagged
+  m_TagString: Police
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -473,6 +474,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 7986270553479105460, guid: 86909726713c0164483414ff64d37ffd, type: 3}
+--- !u!114 &6745523167370776599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739988216329005887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3363fdcfb85b658409f96f430cc2e88f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
 --- !u!1 &1837258668875096132
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,7 +825,7 @@ GameObject:
   - component: {fileID: 8167084844998348457}
   m_Layer: 0
   m_Name: PoliceSUVMirrors
-  m_TagString: Untagged
+  m_TagString: Police
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
