@@ -6,7 +6,8 @@ public class MajorOffenseCounter : MonoBehaviour
 {
     [Header("Settings")]
     public int maxOffenses = 3;
-    public int badEndingSceneIndex = 1;  // Scene index in Build Settings
+    [SerializeField]
+    public int badEndingSceneIndex = 3;  // Scene index in Build Settings
     
     [Header("UI")]
     public TextMeshProUGUI offenseCounterText;
@@ -40,7 +41,7 @@ public class MajorOffenseCounter : MonoBehaviour
         
         UpdateUI();
         
-        if (currentOffenseCount > maxOffenses)
+        if (currentOffenseCount == maxOffenses)
         {
             LoadBadEnding();
         }

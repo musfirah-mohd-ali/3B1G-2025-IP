@@ -2,10 +2,10 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class CutScene : MonoBehaviour
+public class CutSceneWin : MonoBehaviour
 {
     [Header("Cutscene Lines")]
-    [SerializeField] private string[] introLines;
+    [SerializeField] private string[] winLines;
 
     [Header("UI Elements")]
     [SerializeField] private Canvas cutSceneCanvas;
@@ -15,7 +15,7 @@ public class CutScene : MonoBehaviour
     [Header("Controls")]
     public KeyCode prevKey = KeyCode.A;
     public KeyCode nextKey = KeyCode.D;
-    public KeyCode startGameKey = KeyCode.E;
+    public KeyCode continueKey = KeyCode.E; // after winning, continue to level 2
 
     private int currentIndex = 0;
 
@@ -24,11 +24,10 @@ public class CutScene : MonoBehaviour
         if (cutSceneCanvas != null)
             cutSceneCanvas.enabled = true;
 
-        // Safety check
-        if (introLines == null || introLines.Length == 0)
+        if (winLines == null || winLines.Length == 0)
         {
-            Debug.LogError("CutScene: introLines is empty! Assign text in the inspector.");
-            introLines = new string[] { "No lines assigned!" };
+            Debug.LogError("CutSceneWin: winLines is empty! Assign text in the inspector.");
+            winLines = new string[] { "No win lines assigned!" };
         }
 
         currentIndex = 0;
@@ -45,37 +44,36 @@ public class CutScene : MonoBehaviour
 
         if (Input.GetKeyDown(nextKey))
         {
-            currentIndex = Mathf.Min(introLines.Length - 1, currentIndex + 1);
+            currentIndex = Mathf.Min(winLines.Length - 1, currentIndex + 1);
             UpdateText();
         }
 
-        // Only allow E to proceed if at the last line
-        if (Input.GetKeyDown(startGameKey) && currentIndex == introLines.Length - 1)
+        if (Input.GetKeyDown(continueKey) && currentIndex == winLines.Length - 1)
         {
-            LoadNextScene();
+            LoadNextLevel();
         }
     }
 
     void UpdateText()
     {
         if (cutSceneText != null)
-            cutSceneText.text = introLines[currentIndex];
+            cutSceneText.text = winLines[currentIndex];
 
         if (promptText != null)
         {
-            if (currentIndex < introLines.Length - 1)
+            if (currentIndex < winLines.Length - 1)
                 promptText.text = "A: Previous | D: Next";
             else
                 promptText.text = "Press E to continue";
         }
     }
 
-    void LoadNextScene()
+    void LoadNextLevel()
     {
         if (cutSceneCanvas != null)
             cutSceneCanvas.enabled = false;
 
         int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        SceneManager.LoadSceneAsync(nextSceneIndex);
+        SceneManager.LoadScene(nextSceneIndex);
     }
 }
