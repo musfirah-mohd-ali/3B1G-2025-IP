@@ -154,6 +154,13 @@ public class PedestrianSpawner : MonoBehaviour
             {
                 pedestrian.tag = pedestrianTag;
                 Debug.Log($"Pedestrian spawned with tag: {pedestrian.tag}");
+                Collider[] colliders = pedestrian.GetComponentsInChildren<Collider>();
+                foreach (Collider col in colliders)
+                {
+                    col.gameObject.tag = pedestrianTag;
+                }
+
+                Debug.Log($"Pedestrian spawned with tag: {pedestrian.tag} (and {colliders.Length} child colliders tagged)");
             }
             
             // Setup AI waypoints - assign manually configured waypoints

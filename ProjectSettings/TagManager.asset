@@ -8,7 +8,6 @@ TagManager:
   - CinemachineTarget
   - Package
   - CarAI
-  - PedestrianAI
   - Pedestrian
   layers:
   - Default
