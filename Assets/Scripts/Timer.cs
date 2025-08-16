@@ -29,6 +29,16 @@ public class Timer : MonoBehaviour
             {
                 currentTime = 0;
                 StopTimer();
+
+                // Trigger bad ending immediately
+                if (MajorOffenseCounter.Instance != null)
+                {
+                    MajorOffenseCounter.Instance.LoadBadEnding();
+                }
+                else
+                {
+                    Debug.LogError("Timer: MajorOffenseCounter instance not found!");
+                }
             }
 
             UpdateUI();
@@ -40,7 +50,6 @@ public class Timer : MonoBehaviour
         currentTime = maxTime;
         timerRunning = true;
 
-    
         if (timerUI != null)
             timerUI.SetActive(true);
 
@@ -50,7 +59,6 @@ public class Timer : MonoBehaviour
     public void StopTimer()
     {
         timerRunning = false;
-
 
         if (timerUI != null)
             timerUI.SetActive(false);

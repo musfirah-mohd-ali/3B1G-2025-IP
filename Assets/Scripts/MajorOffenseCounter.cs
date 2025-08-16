@@ -52,7 +52,7 @@ public class MajorOffenseCounter : MonoBehaviour
             offenseCounterText.text = $"Major Offenses: {currentOffenseCount}/{maxOffenses}";
     }
 
-    void LoadBadEnding()
+    public void LoadBadEnding()
     {
         Debug.Log("Loading BadEnding scene...");
         SceneManager.LoadScene("BadEnding"); // Use scene name
