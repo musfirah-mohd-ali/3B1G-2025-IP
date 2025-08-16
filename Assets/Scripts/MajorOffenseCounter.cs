@@ -27,7 +27,7 @@ public class MajorOffenseCounter : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Trigger entered by: {other.gameObject.name} (Tag: {other.gameObject.tag})");
+        Debug.Log($"Hit: {other.name}, Tag: {other.tag}");
         if (other.CompareTag("Pedestrian") || other.CompareTag("CarAI"))
         {
             AddOffense();
