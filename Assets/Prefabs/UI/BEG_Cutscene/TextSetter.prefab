@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &810066565531453059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4838182581589620706}
+  - component: {fileID: 8215117736538369683}
+  m_Layer: 0
+  m_Name: TextSetter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4838182581589620706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810066565531453059}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.12019448, y: 1.0412142, z: -4.997042}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8215117736538369683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810066565531453059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ac2480fa3e0b894fb47f3584f020018, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  introLines:
+  - HEY THERE CHUMP!
+  - Oh looks like you have some outstanding debt.
+  - And you look like you don't have the money rn.
+  - Hmmmmmmmmmm.....
+  - Ok you know what.
+  - Since im a good guy :))
+  - I'll let it go for now.
+  - BUT!!!
+  - You have to do a favor for me.
+  - So my friend has a delivery company.
+  - And they need riders to deliver stuff around.
+  - So i expect you to help them out alright.
+  - OR ELSE I WILL MAKE U PAY
+  - One more thing,
+  - Controls are WASD for movement,
+  - E to exit, re-enter the car,
+  - and to accept packages.
+  - Whatever that means.
+  - Off you go now.
+  - Off you go now.
+  cutSceneCanvas: {fileID: 0}
+  cutSceneText: {fileID: 0}
+  promptText: {fileID: 0}
+  prevKey: 97
+  nextKey: 100
+  startGameKey: 101
