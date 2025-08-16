@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deliveryManager: {fileID: 0}
+  audioSource: {fileID: 0}
+  deliveryCompleteSound: {fileID: 8300000, guid: 86c1b344fe4a7554aad43cdedbed9be8, type: 3}
 --- !u!65 &6161178843966603713
 BoxCollider:
   m_ObjectHideFlags: 0

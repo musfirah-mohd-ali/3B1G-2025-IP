@@ -128,4 +128,10 @@ public class MajorOffenseCounter : MonoBehaviour
     {
         return PlayerPrefs.GetInt("OffenseCount", 0);
     }
+    
+    // Get the current offense count
+    public int GetOffenseCount()
+    {
+        return currentOffenseCount;
+    }
 }

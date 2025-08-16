@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,13 +17,17 @@ public class DeliveryManager : MonoBehaviour
     public GameObject deliveryZonePrefab;
     public float zoneScale = 1f;
 
-    [Header("Timer Reference")]
-    public Timer deliveryTimerUI;
-
     [Header("Player Stats")]
     public int deliveredPackages = 0;
     public int cash = 0;
     public int cashPerDelivery = 50;
+    
+    [Header("Level Completion")]
+    public int requiredDeliveries = 5;  // Number of deliveries needed to complete level
+#if UNITY_EDITOR
+    public SceneAsset rewardsScene;  // Drag rewards scene file here in inspector
+#endif
+    [SerializeField] private string rewardsSceneName;  // This stores the scene name
     
     [Header("Penalty System")]
     public int trafficViolationPenalty = 25;
@@ -46,6 +51,17 @@ public class DeliveryManager : MonoBehaviour
     private bool playerInZone = false;
     private float deliveryTimer = 0f;
     public PopupNotification PopupNotifications;
+
+#if UNITY_EDITOR
+    void OnValidate()
+    {
+        // Update the scene name when the SceneAsset changes
+        if (rewardsScene != null)
+        {
+            rewardsSceneName = rewardsScene.name;
+        }
+    }
+#endif
 
     void Start()
     {
@@ -97,10 +113,7 @@ public class DeliveryManager : MonoBehaviour
         ShowDeliveryMarker();
         Debug.Log($"Package picked up! Deliver it to: {GetCurrentLocationName()}");
 
-        if (deliveryTimerUI != null)
-        {
-            deliveryTimerUI.StartTimer();
-        }
+        // Timer management removed - level timer runs independently
     }
     
     private void SelectRandomTarget()
@@ -293,9 +306,7 @@ public class DeliveryManager : MonoBehaviour
     {
         Debug.Log($"Delivery completed at {GetCurrentLocationName()}!");
 
-        // Stop timer
-        if (deliveryTimerUI != null)
-            deliveryTimerUI.StopTimer();
+        // Timer management removed - level timer runs independently
 
         // Update stats
         deliveredPackages++;
@@ -303,6 +314,9 @@ public class DeliveryManager : MonoBehaviour
 
         // Update UI
         UpdateUI();
+        
+        // Check if level is completed
+        CheckLevelCompletion();
         
         // Hide delivery marker
         HideDeliveryMarker();
@@ -388,6 +402,48 @@ public class DeliveryManager : MonoBehaviour
         
         // Force canvas to update
         Canvas.ForceUpdateCanvases();
+    }
+    
+    private void CheckLevelCompletion()
+    {
+        Debug.Log($"Delivery completed! Progress: {deliveredPackages}/{requiredDeliveries}");
+        
+        if (deliveredPackages >= requiredDeliveries)
+        {
+            Debug.Log("Level completed! All required deliveries finished within time limit!");
+            LoadRewardsScene();
+        }
+    }
+    
+    private void LoadRewardsScene()
+    {
+        if (!string.IsNullOrEmpty(rewardsSceneName))
+        {
+            // Store that this is a good ending (level completed successfully)
+            PlayerPrefs.SetString("EndingType", MajorOffenseCounter.EndingType.Good.ToString());
+            PlayerPrefs.SetInt("OffenseCount", MajorOffenseCounter.Instance?.GetOffenseCount() ?? 0);
+            PlayerPrefs.SetInt("DeliveriesCompleted", deliveredPackages);
+            PlayerPrefs.SetInt("FinalCash", cash);
+            
+            // Get remaining time from Timer if available
+            Timer levelTimer = FindObjectOfType<Timer>();
+            if (levelTimer != null)
+            {
+                PlayerPrefs.SetFloat("RemainingTime", levelTimer.GetRemainingTime());
+            }
+            
+            PlayerPrefs.Save();
+            
+            Debug.Log($"Loading rewards scene: {rewardsSceneName}");
+            SceneManager.LoadScene(rewardsSceneName);
+        }
+        else
+        {
+            Debug.LogError("Rewards scene not assigned! Please drag a scene file to the Rewards Scene field.");
+            
+            // Fallback: Show completion message
+            Debug.Log("Level completed but no rewards scene assigned!");
+        }
     }
 
     void OnDrawGizmosSelected()

@@ -44,27 +44,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ac2480fa3e0b894fb47f3584f020018, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  introLines:
-  - HEY THERE CHUMP!
-  - Oh looks like you have some outstanding debt.
-  - And you look like you don't have the money rn.
-  - Hmmmmmmmmmm.....
-  - Ok you know what.
-  - Since im a good guy :))
-  - I'll let it go for now.
-  - BUT!!!
-  - You have to do a favor for me.
-  - So my friend has a delivery company.
-  - And they need riders to deliver stuff around.
-  - So i expect you to help them out alright.
-  - OR ELSE I WILL MAKE U PAY
-  - One more thing,
-  - Controls are WASD for movement,
-  - E to exit, re-enter the car,
-  - and to accept packages.
-  - Whatever that means.
-  - Off you go now.
-  - Off you go now.
+  goodEndingLines:
+  - Nice
+  - You've done what has been instructed
+  - Not bad at all dude
+  - 
+  badEndingLines:
+  - Alamak,
+  - looks like you've failed.
+  - Well.... What are you waitin for?
+  - You better try again before i send you to prison
+  - 
+  defaultLines:
+  - Stop right there!!!
+  - I've been trying to find you for ages!
+  - You have a lot of outstanding debt man...
+  - And its obvious you dont have the money right now...
+  - Hmmmmmm...
+  - Ok, I have a proposition for you.
+  - My cousin has a delivery agency
+  - that sends packages throughout the city.
+  - So... I want you to help her out.
+  - She'll even pay for every package you deliver.
+  - Just follow the rules of the road
+  - and you'll be just fine.
+  - Lastly, use WASD to move around
+  - Press E to exit your car, re-enter your car
+  - and accept pacakges (looks like yellow spheres)
+  - Whatever that means
+  - Good luck!!!
+  - Good luck!!!
   cutSceneCanvas: {fileID: 0}
   cutSceneText: {fileID: 0}
   promptText: {fileID: 0}
