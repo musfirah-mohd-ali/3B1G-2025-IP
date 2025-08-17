@@ -44,36 +44,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ac2480fa3e0b894fb47f3584f020018, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goodEndingLines:
-  - Nice
-  - You've done what has been instructed
-  - Not bad at all dude
-  - 
-  badEndingLines:
-  - Alamak,
-  - looks like you've failed.
-  - Well.... What are you waitin for?
-  - You better try again before i send you to prison
-  - 
-  defaultLines:
-  - Stop right there!!!
-  - I've been trying to find you for ages!
-  - You have a lot of outstanding debt man...
-  - And its obvious you dont have the money right now...
-  - Hmmmmmm...
-  - Ok, I have a proposition for you.
-  - My cousin has a delivery agency
-  - that sends packages throughout the city.
-  - So... I want you to help her out.
-  - She'll even pay for every package you deliver.
-  - Just follow the rules of the road
-  - and you'll be just fine.
-  - Lastly, use WASD to move around
-  - Press E to exit your car, re-enter your car
-  - and accept pacakges (looks like yellow spheres)
-  - Whatever that means
-  - Good luck!!!
-  - Good luck!!!
+  cutsceneLines:
+  - Hey you!!!
+  - I've been trying to find you.
+  - You have some outstanding debt due to your reckless driving.
+  - However...
+  - It looks like you dont have the money to pay up right now.
+  - So i'll give you a proposition.
+  - You'll work at a delivery agency to pay off your debt.
+  - In exchange, i wont send you to jail right now.
+  - Packages are the orange spheres you see around the map
+  - Just deliver them without breaking safety laws and you'll be fine.
+  - If not, i'll come back and arrest you.
+  - WASD for movement,
+  - E to exit/re-eneter the car, as well as accepting packages
+  - ESC to pause he game and change the volume.
+  - Good Luck kid
   cutSceneCanvas: {fileID: 0}
   cutSceneText: {fileID: 0}
   promptText: {fileID: 0}
