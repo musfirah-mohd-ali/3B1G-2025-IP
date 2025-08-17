@@ -22,6 +22,9 @@ Players must obey traffic lights and avoid collisions. Running a red light or hi
 #### Level Timer (Timer.cs)
 A level timer counts down from a set duration. Players must complete the required number of deliveries before time runs out. When the timer reaches zero, a “Time Up” scene or bad ending is triggered. Players can see the remaining time on the UI in minutes and seconds.
 
+#### Controls
+WASD to move, E to exit the car, re-enter the car and to accept packages for delivery and Escape button to open up the menu
+
 ## FSM Implementation
 ## All 4 FSM we implemented
 #### CarAI.cs
@@ -34,3 +37,6 @@ Pedestrians move along waypoints with states like Walking, Running, or Waiting. 
 PoliceChaserAI chases the player with states Chasing or Stopped. It predicts the player’s movement, checks collisions, and handles package loss. Coroutines manage movement, rotation, and collision detection. The police behavior changes depending on the state, so it works as a state machine.
 
 ## References and Credits
+Car Movement - https://www.youtube.com/watch?v=TBIYSksI10k&t=442s
+Idea of the for the traffic system - https://www.youtube.com/watch?v=qxMqy4DupRA&t=56s , https://www.youtube.com/watch?v=rOrSukrOak8&t=91s
+Sound Effets - Alec made the music for the gameplay level
