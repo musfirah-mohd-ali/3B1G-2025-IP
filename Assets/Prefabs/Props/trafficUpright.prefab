@@ -526,9 +526,12 @@ MonoBehaviour:
   redLight: {fileID: 4457298004666420000}
   yellowLight: {fileID: 6128085406502966996}
   greenLight: {fileID: 8089452113844849325}
-  greenDuration: 5
+  greenDuration: 10
   yellowDuration: 2
-  redDuration: 10
+  redDuration: 5
+  penaltyAmount: 50
+  enableAITrafficControl: 1
+  policeSpawner: {fileID: 0}
 --- !u!65 &2774390725718361824
 BoxCollider:
   m_ObjectHideFlags: 0

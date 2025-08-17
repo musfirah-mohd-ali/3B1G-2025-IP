@@ -14,12 +14,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level1.unity
     guid: a05d67bbc2461b245a02447b8ffdd059
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/BadEnding.unity
-    guid: c87f37f080c91814c948a0b57653e8e6
-  - enabled: 0
+    guid: 6a479fe8cf2b23e41823bc99248445f8
+  - enabled: 1
     path: Assets/Scenes/GoodEnding.unity
-    guid: 70ae5b7815dcc724884de4e420ef37c8
+    guid: dfc228462242bcd499d28516c284be27
+  - enabled: 1
+    path: Assets/Scenes/LastScene.unity
+    guid: fcca2a342ef45aa46a8a052a89b7f577
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

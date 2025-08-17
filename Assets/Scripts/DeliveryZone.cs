@@ -24,8 +24,8 @@ public class DeliveryZone : MonoBehaviour
                 Debug.Log("DeliveryZone: Calling OnPlayerEnterZone");
                 deliveryManager.OnPlayerEnterZone();
                 
-                // Play delivery complete sound effect
-                PlayDeliverySound();
+                // Sound will be played only when delivery is actually completed
+                // via PlayDeliveryCompleteSound() method called by DeliveryManager
             }
             else
             {
@@ -51,6 +51,14 @@ public class DeliveryZone : MonoBehaviour
                 deliveryManager.OnPlayerExitZone();
             }
         }
+    }
+    
+    /// <summary>
+    /// Public method to be called by DeliveryManager when delivery is actually completed
+    /// </summary>
+    public void PlayDeliveryCompleteSound()
+    {
+        PlayDeliverySound();
     }
     
     private void PlayDeliverySound()

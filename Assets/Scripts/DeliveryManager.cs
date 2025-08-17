@@ -26,8 +26,13 @@ public class DeliveryManager : MonoBehaviour
     public int requiredDeliveries = 5;  // Number of deliveries needed to complete level
 #if UNITY_EDITOR
     public SceneAsset rewardsScene;  // Drag rewards scene file here in inspector
+    public SceneAsset badEndingScene; // Drag bad ending scene file here in inspector
 #endif
     [SerializeField] private string rewardsSceneName;  // This stores the scene name
+    [SerializeField] private string badEndingSceneName; // This stores the bad ending scene name
+    
+    [Header("Major Offense Settings")]
+    public int maxMajorOffenses = 3; // Maximum allowed major offenses before bad ending
     
     [Header("Penalty System")]
     public int trafficViolationPenalty = 25;
@@ -55,10 +60,14 @@ public class DeliveryManager : MonoBehaviour
 #if UNITY_EDITOR
     void OnValidate()
     {
-        // Update the scene name when the SceneAsset changes
+        // Update the scene names when the SceneAssets change
         if (rewardsScene != null)
         {
             rewardsSceneName = rewardsScene.name;
+        }
+        if (badEndingScene != null)
+        {
+            badEndingSceneName = badEndingScene.name;
         }
     }
 #endif
@@ -87,6 +96,9 @@ public class DeliveryManager : MonoBehaviour
 
     void Update()
     {
+        // Check for major offenses continuously during gameplay
+        CheckMajorOffenses();
+        
         if (hasPackage && playerInZone)
         {
             UpdateDeliveryTimer();
@@ -306,6 +318,16 @@ public class DeliveryManager : MonoBehaviour
     {
         Debug.Log($"Delivery completed at {GetCurrentLocationName()}!");
 
+        // Play delivery complete sound
+        if (currentDeliveryZone != null)
+        {
+            DeliveryZone zoneScript = currentDeliveryZone.GetComponent<DeliveryZone>();
+            if (zoneScript != null)
+            {
+                zoneScript.PlayDeliveryCompleteSound();
+            }
+        }
+
         // Timer management removed - level timer runs independently
 
         // Update stats
@@ -434,10 +456,40 @@ public class DeliveryManager : MonoBehaviour
         Canvas.ForceUpdateCanvases();
     }
     
+    private void CheckMajorOffenses()
+    {
+        // Only check if we haven't already triggered bad ending
+        if (MajorOffenseCounter.Instance != null)
+        {
+            int currentOffenses = MajorOffenseCounter.Instance.GetOffenseCount();
+            
+            if (currentOffenses > maxMajorOffenses)
+            {
+                Debug.Log($"Major offense limit exceeded ({currentOffenses}/{maxMajorOffenses})! Triggering bad ending immediately...");
+                LoadBadEndingScene();
+            }
+        }
+    }
+    
     private void CheckLevelCompletion()
     {
         Debug.Log($"Delivery completed! Progress: {deliveredPackages}/{requiredDeliveries}");
         
+        // Check for major offenses first - if too many, trigger bad ending
+        if (MajorOffenseCounter.Instance != null)
+        {
+            int currentOffenses = MajorOffenseCounter.Instance.GetOffenseCount();
+            Debug.Log($"Current major offenses: {currentOffenses}/{maxMajorOffenses}");
+            
+            if (currentOffenses > maxMajorOffenses)
+            {
+                Debug.Log($"Too many major offenses ({currentOffenses})! Triggering bad ending...");
+                LoadBadEndingScene();
+                return; // Exit early, don't check for level completion
+            }
+        }
+        
+        // If offenses are acceptable, check if level is completed
         if (deliveredPackages >= requiredDeliveries)
         {
             Debug.Log("Level completed! All required deliveries finished within time limit!");
@@ -473,6 +525,37 @@ public class DeliveryManager : MonoBehaviour
             
             // Fallback: Show completion message
             Debug.Log("Level completed but no rewards scene assigned!");
+        }
+    }
+    
+    private void LoadBadEndingScene()
+    {
+        if (!string.IsNullOrEmpty(badEndingSceneName))
+        {
+            // Store that this is a bad ending (too many major offenses)
+            PlayerPrefs.SetString("EndingType", MajorOffenseCounter.EndingType.Bad.ToString());
+            PlayerPrefs.SetInt("OffenseCount", MajorOffenseCounter.Instance?.GetOffenseCount() ?? 0);
+            PlayerPrefs.SetInt("DeliveriesCompleted", deliveredPackages);
+            PlayerPrefs.SetInt("FinalCash", cash);
+            
+            // Get remaining time from Timer if available
+            Timer levelTimer = FindObjectOfType<Timer>();
+            if (levelTimer != null)
+            {
+                PlayerPrefs.SetFloat("RemainingTime", levelTimer.GetRemainingTime());
+            }
+            
+            PlayerPrefs.Save();
+            
+            Debug.Log($"Loading bad ending scene: {badEndingSceneName}");
+            SceneManager.LoadScene(badEndingSceneName);
+        }
+        else
+        {
+            Debug.LogError("Bad ending scene not assigned! Please drag the BadEnding scene file to the Bad Ending Scene field.");
+            
+            // Fallback: Load rewards scene or show message
+            Debug.Log("Bad ending triggered but no bad ending scene assigned!");
         }
     }
 
