@@ -10,6 +10,7 @@ TagManager:
   - CarAI
   - Pedestrian
   - Police
+  - StreetLamp
   layers:
   - Default
   - TransparentFX
